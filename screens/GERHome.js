@@ -1,9 +1,12 @@
 import React, {Component, Fragment} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import MainStackNavigator from './navigation/MainStackNavigator';
 
-const App = () => {
-  return <MainStackNavigator />;
+const GERHome = () => {
+  return (
+    <View style={styles.container}>
+      <Text>Home</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -14,4 +17,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default GERHome;
