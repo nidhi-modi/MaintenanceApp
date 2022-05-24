@@ -9,6 +9,7 @@ const CustomInput = ({
   placeholder,
   secureTextEntry,
   keyboardType,
+  autoCapitalize,
 }) => {
   return (
     <Controller
@@ -30,6 +31,7 @@ const CustomInput = ({
               style={styles.input}
               secureTextEntry={secureTextEntry}
               keyboardType={keyboardType}
+              autoCapitalize={autoCapitalize}
             />
           </View>
           {error && (

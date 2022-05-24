@@ -15,7 +15,7 @@ const MainStackNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="SiteSelection"
         screenOptions={{
           //gestureEnabled: true,
           headerStyle: {

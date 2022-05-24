@@ -30,7 +30,7 @@ const SiteSelection = props => {
           if (houseSelected === 'HAR') {
             navigation.navigate('GERHome');
           } else if (houseSelected === 'GER') {
-            navigation.navigate('GERHome');
+            navigation.navigate('Login');
           } else if (houseSelected === 'OHA') {
             navigation.navigate('GERHome');
           } else if (houseSelected === 'REP') {
