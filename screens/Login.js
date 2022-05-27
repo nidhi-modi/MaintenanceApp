@@ -1,7 +1,14 @@
 //https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec
 
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Alert, BackHandler} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  BackHandler,
+  Keyboard,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -13,10 +20,10 @@ import axios from 'axios';
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-const Login = props => {
-  const {navigation} = props;
+const Login = ({navigation}) => {
   const {control, handleSubmit, watch} = useForm();
   const [house, setHouse] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     try {
@@ -29,29 +36,10 @@ const Login = props => {
     } catch (error) {}
   }, []);
 
-  /*useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackButton());
-
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackButton());
-    };
-  }, []);
-
-  const handleBackButton = () => {
-    BackHandler.exitApp();
-  };
-  */
-
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-        {
-          text: 'Cancel',
-          onPress: () => null,
-          style: 'cancel',
-        },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
-      ]);
+      BackHandler.exitApp();
+
       return true;
     };
 
@@ -64,6 +52,11 @@ const Login = props => {
   }, []);
 
   const onRegisterPressed = async data => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    Keyboard.dismiss();
     const {name, email, phone} = data;
 
     setItem('name', name);
@@ -78,9 +71,12 @@ callback=ctrlq&action=${'doPostLoginData'}&username=${name}&email=${email}&site=
       console.log('URL : ' + url);
       fetch(url, {mode: 'no-cors'}).then(() => {
         console.log('Data Send');
+        navigation.navigate('GERHome');
+        setLoading(false);
       });
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -136,7 +132,7 @@ callback=ctrlq&action=${'doPostLoginData'}&username=${name}&email=${email}&site=
       <View style={styles.marginTop}></View>
 
       <CustomButton
-        text="Upload Details"
+        text={loading ? 'Uploading...' : 'Upload Details'}
         onPress={handleSubmit(onRegisterPressed)}
       />
     </View>

@@ -1,13 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, LogBox} from 'react-native';
 import MainStackNavigator from './navigation/MainStackNavigator';
+import MainStackNavigatorHome from './navigation/MainStackNavigatorHome';
+import MainStackNavigatorLogin from './navigation/MainStackNavigatorLogin';
+
 import AsyncStorage from '@react-native-community/async-storage';
 import GERHome from './screens/GERHome';
 import Login from './screens/Login';
 
-const App = navigation => {
+const App = props => {
   const [house, setHouse] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+
+  useEffect(() => {
+    LogBox.ignoreLogs(["exported from 'deprecated-react-native-prop-types'."]);
+  }, []);
 
   useEffect(() => {
     try {
@@ -39,9 +46,9 @@ const App = navigation => {
   }, []);
 
   if (house !== null && phoneNumber === null) {
-    return <Login />;
+    return <MainStackNavigatorLogin />;
   } else if (house !== null && phoneNumber !== null) {
-    return <GERHome />;
+    return <MainStackNavigatorHome />;
   } else {
     return <MainStackNavigator />;
   }

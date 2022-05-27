@@ -14,11 +14,11 @@ import JobList from '../screens/JobList';
 
 const Stack = createStackNavigator();
 
-const MainStackNavigator = () => {
+const MainStackNavigatorLogin = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SiteSelection"
+        initialRouteName="Login"
         screenOptions={{
           //gestureEnabled: true,
           headerStyle: {
@@ -115,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainStackNavigator;
+export default MainStackNavigatorLogin;
