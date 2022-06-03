@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
 
 import SiteSelection from '../screens/SiteSelection';
 import ScreenNavigator from '../screens/ScreenNavigator';

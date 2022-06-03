@@ -46,9 +46,9 @@ const App = props => {
   }, []);
 
   if (house !== null && phoneNumber === null) {
-    return <MainStackNavigatorLogin />;
+    return <Login />;
   } else if (house !== null && phoneNumber !== null) {
-    return <MainStackNavigatorHome />;
+    return <GERHome />;
   } else {
     return <MainStackNavigator />;
   }

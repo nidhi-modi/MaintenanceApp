@@ -10,14 +10,42 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
-import CustomFooter from '../components/CustomFooter';
 import RequestForm from './RequestForm';
 import AssignJobs from './AssignJobs';
 import JobList from './JobList';
 import {Freeze} from 'react-freeze';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const GERHome = ({navigation}) => {
   const [sitePressed, setSitePressed] = useState('');
+
+  useEffect(() => {
+    const scriptUrl1 =
+      'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+    const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetLoginData'}`;
+
+    console.log('URL : ' + url1);
+    fetch(url1, {mode: 'no-cors'})
+      .then(response => response.json())
+      .then(responseJson => {
+        AsyncStorage.setItem(
+          'loginDetails',
+          JSON.stringify(responseJson),
+          err => {
+            if (err) {
+              console.log('an error');
+              throw err;
+            }
+          },
+        ).catch(err => {
+          console.log('error is: ' + err);
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
   useEffect(() => {
     const backAction = () => {
       BackHandler.exitApp();
