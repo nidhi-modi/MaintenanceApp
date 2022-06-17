@@ -21,6 +21,7 @@ import CustomButton from '../components/CustomButton';
 import CustomHeader from '../components/CustomHeader';
 import {Freeze} from 'react-freeze';
 import SendSMS from 'react-native-sms';
+import moment from 'moment';
 
 const RequestForm = ({navigation}) => {
   const {
@@ -41,6 +42,9 @@ const RequestForm = ({navigation}) => {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     try {
       AsyncStorage.getItem('house')
         .then(selectedHouse => {
@@ -58,9 +62,13 @@ const RequestForm = ({navigation}) => {
         })
         .done();
     } catch (error) {}
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     try {
       AsyncStorage.getItem('loginDetails')
         .then(loginDetail => {
@@ -71,6 +79,8 @@ const RequestForm = ({navigation}) => {
         })
         .done();
     } catch (error) {}
+
+    return () => controller.abort();
   }, [loginDetail]);
 
   useEffect(() => {
@@ -98,6 +108,9 @@ const RequestForm = ({navigation}) => {
     const filteredNumber = d => d.username === assignTaskTo;
 
     const filteredData = loginDetail.items.filter(filteredNumber);
+
+    const dateFormat = moment(idealDueDate).format('dddd, MMMM Do YYYY');
+
     setLoading(true);
 
     if (filteredData.length != 0) {
@@ -107,7 +120,7 @@ const RequestForm = ({navigation}) => {
         const scriptUrl =
           'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
         const url = `${scriptUrl}?
-  callback=ctrlq&action=${'doPostRequestForm'}&site_name=${house}&house_number=${siteLocation}&assigned_from=${assignedName}&description=${description}&assigned_to=${assignTaskTo}&priority=${priority}&ideal_due_date=${idealDueDate}`;
+  callback=ctrlq&action=${'doPostRequestForm'}&site_name=${house}&house_number=${siteLocation}&assigned_from=${assignedName}&description=${description}&assigned_to=${assignTaskTo}&priority=${priority}&ideal_due_date=${dateFormat}`;
         console.log('URL : ' + url);
         fetch(url, {mode: 'no-cors'}).then(() => {
           console.log('Data Send');
@@ -186,167 +199,52 @@ const RequestForm = ({navigation}) => {
     );
   } else {
     return (
-      <KeyboardAwareScrollView
-        style={styles.container}
-        keyboardShouldPersistTaps="handled">
-        <SafeAreaView>
-          <Text style={styles.title}>
-            Complete this form for each maintenance task required
-          </Text>
-          <View style={styles.marginTop}></View>
+      <View style={styles.container}>
+        <CustomHeader text={'Maintenance Request Form'} />
+        <KeyboardAwareScrollView
+          style={styles.mainCont}
+          keyboardShouldPersistTaps="handled">
+          <SafeAreaView>
+            <Text style={styles.title}>
+              Complete this form for each maintenance task required
+            </Text>
+            <View style={styles.marginTop}></View>
 
-          <Text style={styles.titleHeadingText}>Select Your Name </Text>
+            <Text style={styles.titleHeadingText}>Select Your Name </Text>
 
-          <View style={[styles.dropdownContainer]}>
-            <TextInput
-              style={styles.nameInput}
-              autoCapitalize="characters"
-              multiline={true}
-              autoCorrect={false}
-              enablesReturnKeyAutomatically={true}
-              autoGrow={false}
-              returnKeyType={'done'}
-              keyboardType={'default'}
-              editable={false}
-              selectTextOnFocus={false}
-              value={assignedName}
-            />
-          </View>
+            <View style={[styles.dropdownContainer]}>
+              <TextInput
+                style={styles.nameInput}
+                autoCapitalize="characters"
+                multiline={true}
+                autoCorrect={false}
+                enablesReturnKeyAutomatically={true}
+                autoGrow={false}
+                returnKeyType={'done'}
+                keyboardType={'default'}
+                editable={false}
+                selectTextOnFocus={false}
+                value={assignedName}
+              />
+            </View>
 
-          <Text style={styles.titleHeadingText}>Site Location </Text>
+            <Text style={styles.titleHeadingText}>Site Location </Text>
 
-          <Controller
-            control={control}
-            render={({
-              field: {onChange, onBlur, value},
-              fieldState: {error},
-            }) => (
-              <>
-                <View style={[styles.dropdownContainer]}>
-                  <RNDropDownPicker
-                    items={[
-                      {label: 'GER 1', value: 'GER 1'},
-                      {label: 'GER 2', value: 'GER 2'},
-                      {label: 'GER 3', value: 'GER 3'},
-                      {label: 'GER 4', value: 'GER 4'},
-                      {label: 'GER 5', value: 'GER 5'},
-                    ]}
-                    placeholder="SELECT"
-                    containerStyle={{height: 55}}
-                    itemStyle={{
-                      justifyContent: 'flex-start',
-                    }}
-                    dropDownStyle={{backgroundColor: '#fafafa'}}
-                    labelStyle={{
-                      fontSize: 15,
-                      textAlign: 'left',
-                      color: '#000000',
-                      fontFamily: 'TimesNewRomanPSMT',
-                    }}
-                    onChangeItem={item => onChange(item.value)}
-                    //value={value}
-                  />
-                  {error && (
-                    <Text
-                      style={{
-                        color: 'red',
-                        alignSelf: 'stretch',
-                        paddingLeft: 5,
-                      }}>
-                      {error.message || 'Error'}
-                    </Text>
-                  )}
-                </View>
-              </>
-            )}
-            name="siteLocation"
-            rules={{
-              required: 'House is required',
-            }}
-          />
-
-          <Text style={styles.titleHeadingText}>Job Description </Text>
-
-          <Controller
-            control={control}
-            render={({
-              field: {onChange, onBlur, value},
-              fieldState: {error},
-            }) => (
-              <>
-                <View style={[styles.dropdownContainer]}>
-                  <TextInput
-                    style={styles.input}
-                    autoCapitalize="sentences"
-                    multiline={true}
-                    autoCorrect={false}
-                    enablesReturnKeyAutomatically={true}
-                    autoGrow={false}
-                    returnKeyType={'done'}
-                    keyboardType={'default'}
-                    onChangeText={item => onChange(item)}
-                    //value={value}
-                  />
-                  {error && (
-                    <Text
-                      style={{
-                        color: 'red',
-                        alignSelf: 'stretch',
-                        paddingLeft: 5,
-                      }}>
-                      {error.message || 'Error'}
-                    </Text>
-                  )}
-                </View>
-              </>
-            )}
-            name="description"
-            rules={{
-              required: 'Job description is required',
-            }}
-          />
-
-          <Text style={styles.titleHeadingText}>Assign Task </Text>
-
-          <Controller
-            control={control}
-            render={({
-              field: {onChange, onBlur, value},
-              fieldState: {error},
-            }) => (
-              <>
-                <View style={[styles.dropdownContainer]}>
-                  {loginDetail.length != 0 ? (
-                    <RNDropDownPicker
-                      items={getUniqueListBy(loginDetail.items, 'username').map(
-                        item => ({
-                          label: item.username,
-                          value: item.username,
-                        }),
-                      )}
-                      placeholder="SELECT"
-                      containerStyle={{height: 55}}
-                      itemStyle={{
-                        justifyContent: 'flex-start',
-                      }}
-                      dropDownStyle={{backgroundColor: '#fafafa'}}
-                      labelStyle={{
-                        fontSize: 15,
-                        textAlign: 'left',
-                        color: '#000000',
-                        fontFamily: 'TimesNewRomanPSMT',
-                      }}
-                      onChangeItem={item => onChange(item.value)}
-                      //value={value}
-                    />
-                  ) : (
+            <Controller
+              control={control}
+              render={({
+                field: {onChange, onBlur, value},
+                fieldState: {error},
+              }) => (
+                <>
+                  <View style={[styles.dropdownContainer]}>
                     <RNDropDownPicker
                       items={[
-                        {label: 'Nidhi Modi', value: 'Nidhi Modi'},
-                        {label: 'B', value: 'B'},
-                        {label: 'C', value: 'C'},
-                        {label: 'D', value: 'D'},
-                        {label: 'E', value: 'E'},
+                        {label: 'GER 1', value: 'GER 1'},
+                        {label: 'GER 2', value: 'GER 2'},
+                        {label: 'GER 3', value: 'GER 3'},
+                        {label: 'GER 4', value: 'GER 4'},
+                        {label: 'GER 5', value: 'GER 5'},
                       ]}
                       placeholder="SELECT"
                       containerStyle={{height: 55}}
@@ -363,154 +261,275 @@ const RequestForm = ({navigation}) => {
                       onChangeItem={item => onChange(item.value)}
                       //value={value}
                     />
-                  )}
+                    {error && (
+                      <Text
+                        style={{
+                          color: 'red',
+                          alignSelf: 'stretch',
+                          paddingLeft: 5,
+                        }}>
+                        {error.message || 'Error'}
+                      </Text>
+                    )}
+                  </View>
+                </>
+              )}
+              name="siteLocation"
+              rules={{
+                required: 'House is required',
+              }}
+            />
 
-                  {error && (
-                    <Text
-                      style={{
-                        color: 'red',
-                        alignSelf: 'stretch',
-                        paddingLeft: 5,
-                      }}>
-                      {error.message || 'Error'}
-                    </Text>
-                  )}
-                </View>
-              </>
-            )}
-            name="assignTaskTo"
-            rules={{
-              required: 'Assign task is required',
-            }}
-          />
+            <Text style={styles.titleHeadingText}>Job Description </Text>
 
-          <Text style={styles.titleHeadingText}>Priority </Text>
+            <Controller
+              control={control}
+              render={({
+                field: {onChange, onBlur, value},
+                fieldState: {error},
+              }) => (
+                <>
+                  <View style={[styles.dropdownContainer]}>
+                    <TextInput
+                      style={styles.input}
+                      autoCapitalize="sentences"
+                      multiline={true}
+                      autoCorrect={false}
+                      enablesReturnKeyAutomatically={true}
+                      autoGrow={false}
+                      returnKeyType={'done'}
+                      keyboardType={'default'}
+                      onChangeText={item => onChange(item)}
+                      //value={value}
+                    />
+                    {error && (
+                      <Text
+                        style={{
+                          color: 'red',
+                          alignSelf: 'stretch',
+                          paddingLeft: 5,
+                        }}>
+                        {error.message || 'Error'}
+                      </Text>
+                    )}
+                  </View>
+                </>
+              )}
+              name="description"
+              rules={{
+                required: 'Job description is required',
+              }}
+            />
 
-          <Controller
-            control={control}
-            render={({
-              field: {onChange, onBlur, value},
-              fieldState: {error},
-            }) => (
-              <>
-                <View style={[styles.dropdownContainer]}>
-                  <RNDropDownPicker
-                    items={[
-                      {label: '1', value: '1'},
-                      {label: '2', value: '2'},
-                      {label: '3', value: '3'},
-                      {label: '4', value: '4'},
-                      {label: '5', value: '5'},
-                    ]}
-                    placeholder="SELECT"
-                    containerStyle={{height: 55}}
-                    itemStyle={{
-                      justifyContent: 'flex-start',
-                    }}
-                    dropDownStyle={{backgroundColor: '#fafafa'}}
-                    labelStyle={{
-                      fontSize: 15,
-                      textAlign: 'left',
-                      color: '#000000',
-                      fontFamily: 'TimesNewRomanPSMT',
-                    }}
-                    onChangeItem={item => onChange(item.value)}
-                    //value={value}
-                  />
-                  {error && (
-                    <Text
-                      style={{
-                        color: 'red',
-                        alignSelf: 'stretch',
-                        paddingLeft: 5,
-                      }}>
-                      {error.message || 'Error'}
-                    </Text>
-                  )}
-                </View>
-              </>
-            )}
-            name="priority"
-            rules={{
-              required: 'Priority is required',
-            }}
-          />
+            <Text style={styles.titleHeadingText}>Assign Task </Text>
 
-          <View style={styles.direction}>
-            <Text style={styles.titleHeadingText}>Ideal Due Date </Text>
-            <Text style={styles.clearHeadingText} onPress={() => setOpen(true)}>
-              Change
-            </Text>
-          </View>
+            <Controller
+              control={control}
+              render={({
+                field: {onChange, onBlur, value},
+                fieldState: {error},
+              }) => (
+                <>
+                  <View style={[styles.dropdownContainer]}>
+                    {loginDetail.length != 0 ? (
+                      <RNDropDownPicker
+                        items={getUniqueListBy(
+                          loginDetail.items,
+                          'username',
+                        ).map(item => ({
+                          label: item.username,
+                          value: item.username,
+                        }))}
+                        placeholder="SELECT"
+                        containerStyle={{height: 55}}
+                        itemStyle={{
+                          justifyContent: 'flex-start',
+                        }}
+                        dropDownStyle={{backgroundColor: '#fafafa'}}
+                        labelStyle={{
+                          fontSize: 15,
+                          textAlign: 'left',
+                          color: '#000000',
+                          fontFamily: 'TimesNewRomanPSMT',
+                        }}
+                        onChangeItem={item => onChange(item.value)}
+                        //value={value}
+                      />
+                    ) : (
+                      <RNDropDownPicker
+                        items={[
+                          {label: 'Nidhi Modi', value: 'Nidhi Modi'},
+                          {label: 'B', value: 'B'},
+                          {label: 'C', value: 'C'},
+                          {label: 'D', value: 'D'},
+                          {label: 'E', value: 'E'},
+                        ]}
+                        placeholder="SELECT"
+                        containerStyle={{height: 55}}
+                        itemStyle={{
+                          justifyContent: 'flex-start',
+                        }}
+                        dropDownStyle={{backgroundColor: '#fafafa'}}
+                        labelStyle={{
+                          fontSize: 15,
+                          textAlign: 'left',
+                          color: '#000000',
+                          fontFamily: 'TimesNewRomanPSMT',
+                        }}
+                        onChangeItem={item => onChange(item.value)}
+                        //value={value}
+                      />
+                    )}
 
-          <Controller
-            control={control}
-            render={({
-              field: {onChange, onBlur, value},
-              fieldState: {error},
-            }) => (
-              <>
-                <View style={[styles.dropdownContainer]}>
-                  <TextInput
-                    style={styles.borderDate}
-                    autoCapitalize="none"
-                    multiline={false}
-                    autoCorrect={false}
-                    enablesReturnKeyAutomatically={true}
-                    onPress={() => setOpen(true)}
-                    showSoftInputOnFocus={false}
-                    value={date !== 'SELECT' ? date.toDateString() : date}
-                    onFocus={() => setOpen(true)}
-                    contextMenuHidden={true}
-                    selectTextOnFocus={false}
-                  />
+                    {error && (
+                      <Text
+                        style={{
+                          color: 'red',
+                          alignSelf: 'stretch',
+                          paddingLeft: 5,
+                        }}>
+                        {error.message || 'Error'}
+                      </Text>
+                    )}
+                  </View>
+                </>
+              )}
+              name="assignTaskTo"
+              rules={{
+                required: 'Assign task is required',
+              }}
+            />
 
-                  <DatePicker
-                    modal
-                    mode="date"
-                    theme="auto"
-                    open={open}
-                    date={new Date()}
-                    onConfirm={date => {
-                      onChange(date);
-                      setOpen(false);
-                      setDate(date);
-                    }}
-                    onCancel={() => {
-                      setOpen(false);
-                    }}
-                  />
-                  {error && (
-                    <Text
-                      style={{
-                        color: 'red',
-                        alignSelf: 'stretch',
-                        paddingLeft: 5,
-                      }}>
-                      {error.message || 'Error'}
-                    </Text>
-                  )}
-                </View>
-              </>
-            )}
-            name="idealDueDate"
-            rules={{
-              required: 'Ideal due date is required',
-              validate: value => {
-                let valid = dateSelection(value);
-                return valid ? null : 'Invalid date';
-              },
-            }}
-          />
+            <Text style={styles.titleHeadingText}>Priority </Text>
 
-          <CustomButton
-            text={'Submit'}
-            onPress={handleSubmit(onSubmitPressed)}
-          />
+            <Controller
+              control={control}
+              render={({
+                field: {onChange, onBlur, value},
+                fieldState: {error},
+              }) => (
+                <>
+                  <View style={[styles.dropdownContainer]}>
+                    <RNDropDownPicker
+                      items={[
+                        {label: '1', value: '1'},
+                        {label: '2', value: '2'},
+                        {label: '3', value: '3'},
+                        {label: '4', value: '4'},
+                        {label: '5', value: '5'},
+                      ]}
+                      placeholder="SELECT"
+                      containerStyle={{height: 55}}
+                      itemStyle={{
+                        justifyContent: 'flex-start',
+                      }}
+                      dropDownStyle={{backgroundColor: '#fafafa'}}
+                      labelStyle={{
+                        fontSize: 15,
+                        textAlign: 'left',
+                        color: '#000000',
+                        fontFamily: 'TimesNewRomanPSMT',
+                      }}
+                      onChangeItem={item => onChange(item.value)}
+                      //value={value}
+                    />
+                    {error && (
+                      <Text
+                        style={{
+                          color: 'red',
+                          alignSelf: 'stretch',
+                          paddingLeft: 5,
+                        }}>
+                        {error.message || 'Error'}
+                      </Text>
+                    )}
+                  </View>
+                </>
+              )}
+              name="priority"
+              rules={{
+                required: 'Priority is required',
+              }}
+            />
 
-          <View style={{marginBottom: 60}} />
-        </SafeAreaView>
-      </KeyboardAwareScrollView>
+            <View style={styles.direction}>
+              <Text style={styles.titleHeadingText}>Ideal Due Date </Text>
+              <Text
+                style={styles.clearHeadingText}
+                onPress={() => setOpen(true)}>
+                Change
+              </Text>
+            </View>
+
+            <Controller
+              control={control}
+              render={({
+                field: {onChange, onBlur, value},
+                fieldState: {error},
+              }) => (
+                <>
+                  <View style={[styles.dropdownContainer]}>
+                    <TextInput
+                      style={styles.borderDate}
+                      autoCapitalize="none"
+                      multiline={false}
+                      autoCorrect={false}
+                      enablesReturnKeyAutomatically={true}
+                      onPress={() => setOpen(true)}
+                      showSoftInputOnFocus={false}
+                      value={date !== 'SELECT' ? date.toDateString() : date}
+                      onFocus={() => setOpen(true)}
+                      contextMenuHidden={true}
+                      selectTextOnFocus={false}
+                    />
+
+                    <DatePicker
+                      modal
+                      mode="date"
+                      theme="auto"
+                      open={open}
+                      date={new Date()}
+                      onConfirm={date => {
+                        onChange(date);
+                        setOpen(false);
+                        setDate(date);
+                      }}
+                      onCancel={() => {
+                        setOpen(false);
+                      }}
+                    />
+                    {error && (
+                      <Text
+                        style={{
+                          color: 'red',
+                          alignSelf: 'stretch',
+                          paddingLeft: 5,
+                        }}>
+                        {error.message || 'Error'}
+                      </Text>
+                    )}
+                  </View>
+                </>
+              )}
+              name="idealDueDate"
+              rules={{
+                required: 'Ideal due date is required',
+                validate: value => {
+                  let valid = dateSelection(value);
+                  return valid ? null : 'Invalid date';
+                },
+              }}
+            />
+
+            <CustomButton
+              text={'SUBMIT'}
+              onPress={handleSubmit(onSubmitPressed)}
+            />
+
+            <View style={{marginBottom: 60}} />
+          </SafeAreaView>
+        </KeyboardAwareScrollView>
+      </View>
     );
   }
 };
@@ -518,6 +537,9 @@ const RequestForm = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+
+  mainCont: {
     padding: 20,
   },
 

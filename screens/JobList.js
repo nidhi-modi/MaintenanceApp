@@ -5,38 +5,80 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  BackHandler,
-  Keyboard,
+  Image,
   TextInput,
+  BackHandler,
+  FlatList,
   Pressable,
+  Dimensions,
+  Modal,
+  TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useForm} from 'react-hook-form';
-import RNDropDownPicker from '@nectr-rn/react-native-dropdown-picker';
-import DatePicker from 'react-native-date-picker';
-import CustomButton from '../components/CustomButton';
-import CustomHeader from '../components/CustomHeader';
-import {Freeze} from 'react-freeze';
+import {Searchbar} from 'react-native-paper';
+import Card from '../components/Card';
+import moment from 'moment';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import Feather from 'react-native-vector-icons/Feather';
 
-const JobList = ({navigation}) => {
-  const {control, handleSubmit, watch} = useForm();
-  const [house, setHouse] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
+let screenHeight = Dimensions.get('window').height / 2.2;
+let screenWidth = Dimensions.get('window').width / 1.1;
+
+var jobID = '';
+
+const JobList = props => {
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control,
+    reset,
+    formState: {errors},
+    watch,
+  } = useForm();
+
+  const [jobDetails, setJobDetails] = useState([]);
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [userName, setUserName] = useState('');
+  const [isReadMore, setReadMore] = useState(false);
+  const [searchText, setSearchText] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     try {
-      AsyncStorage.getItem('house')
-        .then(selectedHouse => {
-          var houseSelected = JSON.parse(selectedHouse);
-          setHouse(houseSelected);
+      AsyncStorage.getItem('name')
+        .then(assignedFrom => {
+          var jobAssignedFrom = JSON.parse(assignedFrom);
+          setUserName(jobAssignedFrom);
         })
         .done();
     } catch (error) {}
-  }, []);
+  }, [userName]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const scriptUrl1 =
+      'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+    const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
+
+    console.log('URL : ' + url1);
+
+    fetch(url1, {mode: 'no-cors', signal: signal})
+      .then(response => response.json())
+      .then(responseJson => {
+        setJobDetails(responseJson);
+        //filterlist();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    return () => controller.abort();
+  }, [jobDetails]);
 
   useEffect(() => {
     const backAction = () => {
@@ -53,194 +95,247 @@ const JobList = ({navigation}) => {
     return () => backHandler.remove();
   }, []);
 
-  const onSubmitPressed = async data => {};
+  const handleSearch = text => {
+    setSearchQuery(text);
+    filterSearchData();
+  };
 
-  const setItem = async (myKey, value) => {
-    try {
-      return await AsyncStorage.setItem(myKey, JSON.stringify(value));
-    } catch (error) {}
+  const filterSearchData = () => {
+    const text = searchQuery;
+
+    if (text) {
+      const newData = jobDetails.items.filter(function (item) {
+        // Applying filter for the inserted text in search bar
+        const itemData = item.house
+          ? item.house.toUpperCase()
+          : ''.toUpperCase();
+        const itemData2 = item.job_status;
+
+        const textData = text.toUpperCase();
+        const textData2 = 'Completed';
+        return (
+          itemData.indexOf(textData) > -1 && itemData2.indexOf(textData2) > -1
+        );
+      });
+
+      return newData;
+    } else {
+      const jobAssignedTo = d =>
+        //d.assign_to === name &&
+        d.job_status === 'Completed';
+
+      const returnFilter = jobDetails.items
+        .filter(jobAssignedTo)
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+      return returnFilter;
+    }
+  };
+
+  const listEmptyComponent = () => {
+    return (
+      <View style={styles.noDataText}>
+        <Text style={styles.noDataTitle}>No Data Available</Text>
+      </View>
+    );
+  };
+
+  const onChangeLayout = jobId => {
+    setReadMore(jobId);
   };
 
   return (
-    <KeyboardAwareScrollView
-      style={styles.container}
-      keyboardShouldPersistTaps="handled">
-      <SafeAreaView>
-        <Text style={styles.title}>
-          Complete this form for each maintenance task required
-        </Text>
-        <View style={styles.marginTop}></View>
-
-        <Text style={styles.titleHeadingText}>Select Your Name </Text>
-
-        <View style={[styles.dropdownContainer]}>
-          <RNDropDownPicker
-            items={[
-              {label: 'A', value: 'A'},
-              {label: 'B', value: 'B'},
-              {label: 'C', value: 'C'},
-              {label: 'D', value: 'D'},
-              {label: 'E', value: 'E'},
-            ]}
-            placeholder="SELECT"
-            containerStyle={{height: 55}}
-            itemStyle={{
-              justifyContent: 'flex-start',
-            }}
-            dropDownStyle={{backgroundColor: '#fafafa'}}
-            labelStyle={{
-              fontSize: 15,
-              textAlign: 'left',
-              color: '#000000',
-              fontFamily: 'TimesNewRomanPSMT',
-            }}
-            //onChangeItem={item => this.updateDropdown(item.value, 'houseNumber')}
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={{color: '#219DCD'}}>Hi JHi</Text>
+        <Text style={styles.textSize}>Maintenance Job List</Text>
+        <Pressable
+          onPress={() => setSearchText(true)}
+          android_ripple={{borderless: true, radius: 50}}>
+          <Image
+            style={styles.resizeImage}
+            source={require('../images/search.png')}
           />
-        </View>
+        </Pressable>
+      </View>
 
-        <Text style={styles.titleHeadingText}>Site Location </Text>
+      <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
+        {searchText ? (
+          <View style={styles.searchContainer}>
+            <View style={styles.seachTextinput}>
+              <TextInput
+                autoCapitalize="words"
+                autoCorrect={false}
+                onChangeText={text => handleSearch(text)}
+                status="info"
+                placeholder="Search here ..."
+                style={styles.serachTextinputStyle}
+              />
+            </View>
 
-        <View style={[styles.dropdownContainer]}>
-          <RNDropDownPicker
-            items={[
-              {label: 'GER 1', value: 'GER 1'},
-              {label: 'GER 2', value: 'GER 2'},
-              {label: 'GER 3', value: 'GER 3'},
-              {label: 'GER 4', value: 'GER 4'},
-              {label: 'GER 5', value: 'GER 5'},
-            ]}
-            placeholder="SELECT"
-            containerStyle={{height: 55}}
-            itemStyle={{
-              justifyContent: 'flex-start',
-            }}
-            dropDownStyle={{backgroundColor: '#fafafa'}}
-            labelStyle={{
-              fontSize: 15,
-              textAlign: 'left',
-              color: '#000000',
-              fontFamily: 'TimesNewRomanPSMT',
-            }}
-            //onChangeItem={item => this.updateDropdown(item.value, 'houseNumber')}
-          />
-        </View>
+            <View style={styles.searchClose}>
+              <SimpleLineIcons
+                onPress={() => {
+                  setSearchText(false), setSearchQuery('');
+                }}
+                name="close"
+                size={35}
+                color="black"
+              />
+            </View>
+          </View>
+        ) : null}
 
-        <Text style={styles.titleHeadingText}>Job Description </Text>
+        <SafeAreaView>
+          {jobDetails.length != 0 ? (
+            <FlatList
+              contentContainerStyle={{paddingBottom: 100}}
+              data={filterSearchData()}
+              ListEmptyComponent={listEmptyComponent}
+              renderItem={({item}) => (
+                <Card>
+                  <View style={styles.directionCol}>
+                    <View style={styles.direction}>
+                      <Text style={styles.clearHeadingText}>
+                        {' '}
+                        Who Assigned :{' '}
+                      </Text>
+                      <Text style={styles.flatListText}>
+                        {item.who_assigned}
+                      </Text>
+                    </View>
 
-        <View style={[styles.dropdownContainer]}>
-          <TextInput
-            style={styles.input}
-            autoCapitalize="sentences"
-            multiline={true}
-            autoCorrect={false}
-            enablesReturnKeyAutomatically={true}
-            autoGrow={false}
-            //onChangeText={(text) => this.updateTextInput(text, 'optionComment1')}
-            returnKeyType={'done'}
-            keyboardType={'default'}
-          />
-        </View>
+                    <View style={styles.direction}>
+                      <Text style={styles.clearHeadingText}> Location : </Text>
+                      <Text style={styles.flatListText}>{item.house}</Text>
+                    </View>
 
-        <Text style={styles.titleHeadingText}>Assign Task </Text>
+                    <View style={styles.direction}>
+                      <Text style={styles.clearHeadingText}> Due Date : </Text>
+                      <Text style={styles.flatListText}>{item.due_date}</Text>
+                    </View>
 
-        <View style={[styles.dropdownContainer]}>
-          <RNDropDownPicker
-            items={[
-              {label: 'A', value: 'A'},
-              {label: 'B', value: 'B'},
-              {label: 'C', value: 'C'},
-              {label: 'D', value: 'D'},
-              {label: 'E', value: 'E'},
-            ]}
-            placeholder="SELECT"
-            containerStyle={{height: 55}}
-            itemStyle={{
-              justifyContent: 'flex-start',
-            }}
-            dropDownStyle={{backgroundColor: '#fafafa'}}
-            labelStyle={{
-              fontSize: 15,
-              textAlign: 'left',
-              color: '#000000',
-              fontFamily: 'TimesNewRomanPSMT',
-            }}
-            //onChangeItem={item => this.updateDropdown(item.value, 'houseNumber')}
-          />
-        </View>
+                    <View style={styles.direction}>
+                      <Text style={styles.clearHeadingText}>
+                        {' '}
+                        Assigned To :{' '}
+                      </Text>
+                      <Text style={styles.flatListText}>{item.assign_to}</Text>
+                    </View>
 
-        <Text style={styles.titleHeadingText}>Priority </Text>
+                    <View
+                      style={{
+                        height: isReadMore === item.uniqueId ? null : 0,
+                      }}>
+                      <View style={styles.direction}>
+                        <Text style={styles.clearHeadingText}>
+                          {' '}
+                          Started On :{' '}
+                        </Text>
+                        <Text style={styles.flatListText}>
+                          {moment(item.jobstart_timestamp).format(
+                            'MMMM Do YYYY',
+                          )}
+                        </Text>
+                      </View>
 
-        <View style={[styles.dropdownContainer]}>
-          <RNDropDownPicker
-            items={[
-              {label: '1', value: '1'},
-              {label: '2', value: '2'},
-              {label: '3', value: '3'},
-              {label: '4', value: '4'},
-              {label: '5', value: '5'},
-            ]}
-            placeholder="SELECT"
-            containerStyle={{height: 55}}
-            itemStyle={{
-              justifyContent: 'flex-start',
-            }}
-            dropDownStyle={{backgroundColor: '#fafafa'}}
-            labelStyle={{
-              fontSize: 15,
-              textAlign: 'left',
-              color: '#000000',
-              fontFamily: 'TimesNewRomanPSMT',
-            }}
-            //onChangeItem={item => this.updateDropdown(item.value, 'houseNumber')}
-          />
-        </View>
-        <View style={styles.direction}>
-          <Text style={styles.titleHeadingText}>Ideal Due Date </Text>
-          <Text style={styles.clearHeadingText} onPress={() => setOpen(true)}>
-            Change
-          </Text>
-        </View>
-        <View style={[styles.dropdownContainer]}>
-          <TextInput
-            style={styles.borderDate}
-            autoCapitalize="none"
-            multiline={false}
-            autoCorrect={false}
-            enablesReturnKeyAutomatically={true}
-            onChangeText={() => setOpen(true)}
-            onPress={() => setOpen(true)}
-            showSoftInputOnFocus={false}
-            value={date.toDateString()}
-            onFocus={() => setOpen(true)}
-            //onSubmitEditing={() => { this.refsamp.focus(); }}
-          />
+                      <View style={styles.direction}>
+                        <Text style={styles.clearHeadingText}>
+                          {' '}
+                          Completed On :{' '}
+                        </Text>
+                        <Text style={styles.flatListText}>
+                          {moment(item.jobdone_timestamp).format(
+                            'MMMM Do YYYY',
+                          )}
+                        </Text>
+                      </View>
 
-          <DatePicker
-            modal
-            mode="date"
-            open={open}
-            date={date}
-            onConfirm={date => {
-              setOpen(false);
-              setDate(date);
-            }}
-            onCancel={() => {
-              setOpen(false);
-            }}
-          />
-        </View>
+                      <View style={styles.direction}>
+                        <Text style={styles.clearHeadingText}>
+                          {' '}
+                          Comments :{' '}
+                        </Text>
+                        {item.comments != '' ? (
+                          <Text style={styles.flatListText}>
+                            {item.comments}
+                          </Text>
+                        ) : (
+                          <Text style={styles.flatListText}>No Comments</Text>
+                        )}
+                      </View>
 
-        <CustomButton text={'Submit'} onPress={handleSubmit(onSubmitPressed)} />
+                      <View style={styles.direction}>
+                        <Text style={styles.clearHeadingText}>
+                          {' '}
+                          Job Description :{' '}
+                        </Text>
+                        <Text style={styles.flatListTextDesc}>
+                          {item.job_decsription}
+                        </Text>
+                      </View>
 
-        <View style={{marginBottom: 60}} />
-      </SafeAreaView>
-    </KeyboardAwareScrollView>
+                      <View style={styles.direction}>
+                        <Text style={styles.clearHeadingText}> Job ID : </Text>
+                        <Text style={styles.flatListTextID}>
+                          {item.uniqueId}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {isReadMore === item.uniqueId ? (
+                    <View style={styles.readMoreButton}>
+                      <Pressable
+                        onPress={() => onChangeLayout('')}
+                        android_ripple={{borderless: true, radius: 40}}>
+                        <Text style={styles.textRightGreen}>Read Less...</Text>
+                      </Pressable>
+                    </View>
+                  ) : (
+                    <View style={styles.readMoreButton}>
+                      <Pressable
+                        onPress={() => onChangeLayout(item.uniqueId)}
+                        android_ripple={{borderless: true, radius: 40}}>
+                        <Text style={styles.textRightRed}>Read More...</Text>
+                      </Pressable>
+                    </View>
+                  )}
+                </Card>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          ) : (
+            <View style={styles.noDataText}>
+              <Text style={styles.loadingDataTitle}>Please Wait...</Text>
+            </View>
+          )}
+        </SafeAreaView>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+
+  flatListText: {
+    color: 'black',
+    fontSize: 16,
+    fontFamily: 'TimesNewRomanPSMT',
+    marginBottom: 11,
+  },
+
+  flatListTextID: {
+    color: '#00203fff',
+    fontSize: 18,
+    fontFamily: 'TimesNewRomanPS-BoldMT',
+    marginBottom: 11,
+  },
+
+  mainCont: {
     padding: 20,
   },
 
@@ -257,17 +352,43 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+  noDataTitle: {
+    fontSize: 22,
+    color: '#ff0000',
+    marginBottom: 20,
+    fontFamily: 'TimesNewRomanPSMT',
+    textAlign: 'center',
+  },
+
+  loadingDataTitle: {
+    fontSize: 22,
+    color: '#02A931',
+    marginBottom: 20,
+    fontFamily: 'TimesNewRomanPSMT',
+    textAlign: 'center',
+  },
+
   titleHeadingText: {
     color: 'black',
     fontSize: 17,
     fontFamily: 'TimesNewRomanPS-BoldMT',
   },
 
+  flatListTextDesc: {
+    flexShrink: 1,
+    flex: 1,
+    color: 'black',
+    fontSize: 16,
+    fontFamily: 'TimesNewRomanPSMT',
+    marginBottom: 11,
+  },
+
   clearHeadingText: {
-    color: 'red',
-    fontSize: 15,
+    color: 'black',
+    fontSize: 16,
     marginRight: 15,
     fontFamily: 'TimesNewRomanPS-BoldMT',
+    marginBottom: 11,
   },
 
   inBtnmarginDimension: {
@@ -312,8 +433,139 @@ const styles = StyleSheet.create({
 
   direction: {
     flexDirection: 'row',
+  },
+
+  directionCol: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+
+  buttonDimension: {
+    width: '80%',
+    alignSelf: 'center',
+  },
+
+  iconBehav: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+
+  resizeImage: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain',
+    marginRight: 15,
+  },
+
+  noDataText: {
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#E0F2F9',
+    padding: 20,
+    paddingTop: 220,
+    paddingBottom: 220,
+  },
+  textRed: {
+    color: '#ff0000',
+    fontSize: 21,
+    fontFamily: 'TimesNewRomanPS-BoldMT',
+    textDecorationLine: 'underline',
+  },
+  modalContainer: {
+    height: screenHeight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+    borderRadius: 12,
+    backgroundColor: '#ffffff',
+    width: screenWidth,
+  },
+
+  dropdownContainer: {
+    borderRadius: 12,
+    marginBottom: 25,
+    marginTop: 20,
+  },
+  input: {
+    width: 300,
+    fontSize: 16,
+    color: '#000000',
+    fontFamily: 'TimesNewRomanPSMT',
+    backgroundColor: 'white',
+    height: 185,
+    borderColor: '#000000',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    marginVertical: 5,
+    textAlignVertical: 'top',
+    padding: 10,
+  },
+
+  textRightRed: {
+    fontFamily: 'TimesNewRomanPS-BoldMT',
+    color: '#ff0000',
+    fontSize: 15,
+  },
+
+  textRightGreen: {
+    fontFamily: 'TimesNewRomanPS-BoldMT',
+    color: '#12AA18',
+    fontSize: 15,
+  },
+
+  readMoreButton: {
+    alignSelf: 'flex-end',
+  },
+
+  header: {
+    height: 63,
+    backgroundColor: '#219DCD',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+
+  textSize: {
+    fontSize: 19,
+    color: '#ffffff',
+    fontFamily: 'TimesNewRomanPS-BoldMT',
+  },
+
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    alignSelf: 'flex-end',
+    paddingLeft: 40,
+    marginBottom: 12,
+  },
+
+  seachTextinput: {
+    borderRadius: 25,
+    borderWidth: 1,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderColor: 'black',
+    backgroundColor: '#fff',
+    marginVertical: 5,
+    width: '100%',
+  },
+
+  searchClose: {marginLeft: 10, alignSelf: 'center'},
+
+  serachTextinputStyle: {
+    color: '#000',
+    fontFamily: 'TimesNewRomanPSMT',
+    fontSize: 16,
   },
 });
 

@@ -20,12 +20,15 @@ const GERHome = ({navigation}) => {
   const [sitePressed, setSitePressed] = useState('');
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const scriptUrl1 =
       'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
     const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetLoginData'}`;
 
     console.log('URL : ' + url1);
-    fetch(url1, {mode: 'no-cors'})
+    fetch(url1, {mode: 'no-cors', signal: signal})
       .then(response => response.json())
       .then(responseJson => {
         AsyncStorage.setItem(
@@ -44,6 +47,7 @@ const GERHome = ({navigation}) => {
       .catch(error => {
         console.log(error);
       });
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {
@@ -68,6 +72,200 @@ const GERHome = ({navigation}) => {
   if (sitePressed == 'RequestForm') {
     return (
       <View style={styles.container}>
+        <RequestForm />
+        <View style={styles.navContainer}>
+          <View style={styles.navBar}>
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('RequestForm')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage}
+                  source={require('../images/request.png')}
+                />
+                <Text style={styles.textSize}>Request</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('AssignJobs')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage2}
+                  source={require('../images/assign.png')}
+                />
+                <Text style={styles.textSize}>Assign Job</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('JobList')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage}
+                  source={require('../images/list.png')}
+                />
+                <Text style={styles.textSize}>Job List</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  } else if (sitePressed == 'AssignJobs') {
+    return (
+      <View style={styles.container}>
+        <AssignJobs />
+        <View style={styles.navContainer}>
+          <View style={styles.navBar}>
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('RequestForm')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage}
+                  source={require('../images/request.png')}
+                />
+                <Text style={styles.textSize}>Request</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('AssignJobs')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage2}
+                  source={require('../images/assign.png')}
+                />
+                <Text style={styles.textSize}>Assign Job</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('JobList')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage}
+                  source={require('../images/list.png')}
+                />
+                <Text style={styles.textSize}>Job List</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  } else if (sitePressed == 'JobList') {
+    return (
+      <View style={styles.container}>
+        <JobList />
+        <View style={styles.navContainer}>
+          <View style={styles.navBar}>
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('RequestForm')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage}
+                  source={require('../images/request.png')}
+                />
+                <Text style={styles.textSize}>Request</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('AssignJobs')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage2}
+                  source={require('../images/assign.png')}
+                />
+                <Text style={styles.textSize}>Assign Job</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('JobList')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage}
+                  source={require('../images/list.png')}
+                />
+                <Text style={styles.textSize}>Job List</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <RequestForm />
+        <View style={styles.navContainer}>
+          <View style={styles.navBar}>
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('RequestForm')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage}
+                  source={require('../images/request.png')}
+                />
+                <Text style={styles.textSize}>Request</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('AssignJobs')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage2}
+                  source={require('../images/assign.png')}
+                />
+                <Text style={styles.textSize}>Assign Job</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.columnStyle}>
+              <Pressable
+                onPress={() => numberPressed('JobList')}
+                style={styles.iconBehav}
+                android_ripple={{borderless: true, radius: 50}}>
+                <Image
+                  style={styles.resizeImage}
+                  source={require('../images/list.png')}
+                />
+                <Text style={styles.textSize}>Job List</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  /*if (sitePressed == 'RequestForm') {
+    return (
+      <View style={styles.container}>
         <CustomHeader text={'Maintenance Request Form'} />
         <ScrollView>
           <RequestForm />
@@ -77,32 +275,31 @@ const GERHome = ({navigation}) => {
             <View style={styles.header}>
               <View style={styles.marginStyle}>
                 <View style={styles.columnStyle}>
-                  <TouchableOpacity
-                    onPress={() => numberPressed('RequestForm')}>
+                  <Pressable onPress={() => numberPressed('RequestForm')}>
                     <Image
                       style={styles.resizeImage}
                       source={require('../images/request.png')}
                     />
 
                     <Text style={styles.textSize}>Request</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
 
-                <TouchableOpacity onPress={() => numberPressed('AssignJobs')}>
+                <Pressable onPress={() => numberPressed('AssignJobs')}>
                   <Image
                     style={styles.resizeImage2}
                     source={require('../images/assign.png')}
                   />
                   <Text style={styles.textSize}>Assign Job</Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity onPress={() => numberPressed('JobList')}>
+                <Pressable onPress={() => numberPressed('JobList')}>
                   <Image
                     style={styles.resizeImage}
                     source={require('../images/list.png')}
                   />
                   <Text style={styles.textSize}>Job List</Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
           </View>
@@ -122,31 +319,31 @@ const GERHome = ({navigation}) => {
           <View style={styles.header}>
             <View style={styles.marginStyle}>
               <View style={styles.columnStyle}>
-                <TouchableOpacity onPress={() => numberPressed('RequestForm')}>
+                <Pressable onPress={() => numberPressed('RequestForm')}>
                   <Image
                     style={styles.resizeImage}
                     source={require('../images/request.png')}
                   />
                   <Text style={styles.textSize}>Request</Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
 
-              <TouchableOpacity onPress={() => numberPressed('AssignJobs')}>
+              <Pressable onPress={() => numberPressed('AssignJobs')}>
                 <Image
                   style={styles.resizeImage2}
                   source={require('../images/assign.png')}
                 />
 
                 <Text style={styles.textSize}>Assign Job</Text>
-              </TouchableOpacity>
+              </Pressable>
 
-              <TouchableOpacity onPress={() => numberPressed('JobList')}>
+              <Pressable onPress={() => numberPressed('JobList')}>
                 <Image
                   style={styles.resizeImage}
                   source={require('../images/list.png')}
                 />
                 <Text style={styles.textSize}>Job List</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -165,30 +362,30 @@ const GERHome = ({navigation}) => {
           <View style={styles.header}>
             <View style={styles.marginStyle}>
               <View style={styles.columnStyle}>
-                <TouchableOpacity onPress={() => numberPressed('RequestForm')}>
+                <Pressable onPress={() => numberPressed('RequestForm')}>
                   <Image
                     style={styles.resizeImage}
                     source={require('../images/request.png')}
                   />
                   <Text style={styles.textSize}>Request</Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
 
-              <TouchableOpacity onPress={() => numberPressed('AssignJobs')}>
+              <Pressable onPress={() => numberPressed('AssignJobs')}>
                 <Image
                   style={styles.resizeImage2}
                   source={require('../images/assign.png')}
                 />
                 <Text style={styles.textSize}>Assign Job</Text>
-              </TouchableOpacity>
+              </Pressable>
 
-              <TouchableOpacity onPress={() => numberPressed('JobList')}>
+              <Pressable onPress={() => numberPressed('JobList')}>
                 <Image
                   style={styles.resizeImage}
                   source={require('../images/list.png')}
                 />
                 <Text style={styles.textSize}>Job List</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -206,39 +403,38 @@ const GERHome = ({navigation}) => {
             <View style={styles.header}>
               <View style={styles.marginStyle}>
                 <View style={styles.columnStyle}>
-                  <TouchableOpacity
-                    onPress={() => numberPressed('RequestForm')}>
+                  <Pressable onPress={() => numberPressed('RequestForm')}>
                     <Image
                       style={styles.resizeImage}
                       source={require('../images/request.png')}
                     />
 
                     <Text style={styles.textSize}>Request</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
 
-                <TouchableOpacity onPress={() => numberPressed('AssignJobs')}>
+                <Pressable onPress={() => numberPressed('AssignJobs')}>
                   <Image
                     style={styles.resizeImage2}
                     source={require('../images/assign.png')}
                   />
                   <Text style={styles.textSize}>Assign Job</Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity onPress={() => numberPressed('JobList')}>
+                <Pressable onPress={() => numberPressed('JobList')}>
                   <Image
                     style={styles.resizeImage}
                     source={require('../images/list.png')}
                   />
                   <Text style={styles.textSize}>Job List</Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
           </View>
         </Freeze>
       </View>
     );
-  }
+  }*/
 };
 
 const styles = StyleSheet.create({
@@ -300,6 +496,24 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  // EXAMPLES
+  navContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    bottom: 0,
+  },
+
+  navBar: {
+    flexDirection: 'row',
+    backgroundColor: '#219DCD',
+    width: '100%',
+    justifyContent: 'space-evenly',
+  },
+
+  iconBehav: {
+    padding: 10,
   },
 });
 
