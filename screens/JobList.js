@@ -146,6 +146,7 @@ const JobList = props => {
 
   return (
     <View style={styles.container}>
+        <SafeAreaView>
       <View style={styles.header}>
         <Text style={{color: '#219DCD'}}>Hi JHi</Text>
         <Text style={styles.textSize}>Maintenance Job List</Text>
@@ -186,7 +187,7 @@ const JobList = props => {
           </View>
         ) : null}
 
-        <SafeAreaView>
+      
           {jobDetails.length != 0 ? (
             <FlatList
               contentContainerStyle={{paddingBottom: 100}}
@@ -310,8 +311,9 @@ const JobList = props => {
               <Text style={styles.loadingDataTitle}>Please Wait...</Text>
             </View>
           )}
-        </SafeAreaView>
       </View>
+      </SafeAreaView>
+
     </View>
   );
 };

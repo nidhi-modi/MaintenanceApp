@@ -10,10 +10,12 @@ import {
   Keyboard,
   TextInput,
   ActivityIndicator,
+  Platform,
+  StatusBar
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import {useForm, Controller} from 'react-hook-form';
 import RNDropDownPicker from '@nectr-rn/react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
@@ -200,11 +202,12 @@ const RequestForm = ({navigation}) => {
   } else {
     return (
       <View style={styles.container}>
+         <SafeAreaView>
         <CustomHeader text={'Maintenance Request Form'} />
         <KeyboardAwareScrollView
           style={styles.mainCont}
           keyboardShouldPersistTaps="handled">
-          <SafeAreaView>
+         
             <Text style={styles.title}>
               Complete this form for each maintenance task required
             </Text>
@@ -214,7 +217,7 @@ const RequestForm = ({navigation}) => {
 
             <View style={[styles.dropdownContainer]}>
               <TextInput
-                style={styles.nameInput}
+                style={Platform.OS === 'ios' ?  styles.nameInputIos:  styles.nameInputAndroid}
                 autoCapitalize="characters"
                 multiline={true}
                 autoCorrect={false}
@@ -527,8 +530,9 @@ const RequestForm = ({navigation}) => {
             />
 
             <View style={{marginBottom: 60}} />
-          </SafeAreaView>
+          
         </KeyboardAwareScrollView>
+        </SafeAreaView>
       </View>
     );
   }
@@ -537,6 +541,7 @@ const RequestForm = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 100
   },
 
   mainCont: {
@@ -606,6 +611,7 @@ const styles = StyleSheet.create({
     fontFamily: 'TimesNewRomanPSMT',
     backgroundColor: 'white',
     width: '100%',
+    height: 55,
     borderColor: '#e8e8e8',
     borderWidth: 1,
     borderRadius: 5,
@@ -630,7 +636,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
 
-  nameInput: {
+  nameInputIos: {
     fontSize: 15,
     color: '#000000',
     fontFamily: 'TimesNewRomanPSMT',
@@ -642,6 +648,25 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginVertical: 5,
+    paddingTop: 17,
+    paddingBottom: 17
+
+  },
+
+  nameInputAndroid: {
+    fontSize: 15,
+    color: '#000000',
+    fontFamily: 'TimesNewRomanPSMT',
+    backgroundColor: 'white',
+    width: '100%',
+    height: 55,
+    borderColor: '#e8e8e8',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginVertical: 5,
+
+
   },
 
   direction: {
@@ -649,6 +674,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+
+  StatusBar: {
+    backgroundColor: '#219DCD'
+}
 });
 
 export default RequestForm;

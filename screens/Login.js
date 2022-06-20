@@ -91,7 +91,6 @@ callback=ctrlq&action=${'doPostLoginData'}&username=${name}&email=${email}&site=
       <Text style={styles.title}>Enter your details</Text>
 
       <View style={styles.marginTop}></View>
-
       <CustomInput
         name="name"
         control={control}

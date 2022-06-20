@@ -182,9 +182,10 @@ const AssignJobs = props => {
 
   return (
     <View style={styles.container}>
+        <SafeAreaView>
       <CustomHeader text={'Maintenance Jobs Assigned'} />
       <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
-        <SafeAreaView>
+      
           {requestDetails.length != 0 ? (
             <FlatList
               contentContainerStyle={{paddingBottom: 100}}
@@ -316,8 +317,9 @@ const AssignJobs = props => {
               <Text style={styles.loadingDataTitle}>Please Wait...</Text>
             </View>
           )}
-        </SafeAreaView>
+      
       </View>
+      </SafeAreaView>
     </View>
   );
 };

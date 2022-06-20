@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {View, Text, TextInput, StyleSheet, Platform} from 'react-native';
 import {Controller} from 'react-hook-form';
 
 const CustomInput = ({
@@ -20,8 +20,8 @@ const CustomInput = ({
         <>
           <View
             style={[
-              styles.container,
               {borderColor: error ? 'red' : '#e8e8e8'},
+              Platform.OS === 'ios'? styles.containerIos: styles.containerAndroid,
             ]}>
             <TextInput
               value={value}
@@ -32,6 +32,7 @@ const CustomInput = ({
               secureTextEntry={secureTextEntry}
               keyboardType={keyboardType}
               autoCapitalize={autoCapitalize}
+              placeholderTextColor={'#808080'}
             />
           </View>
           {error && (
@@ -46,14 +47,23 @@ const CustomInput = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
+  containerIos: {
     backgroundColor: 'white',
     width: '100%',
-
     borderColor: '#e8e8e8',
     borderWidth: 1,
     borderRadius: 5,
+    padding: 16,
+    paddingHorizontal: 10,
+    marginVertical: 5,
+  },
 
+  containerAndroid: {
+    backgroundColor: 'white',
+    width: '100%',
+    borderColor: '#e8e8e8',
+    borderWidth: 1,
+    borderRadius: 5,
     paddingHorizontal: 10,
     marginVertical: 5,
   },
