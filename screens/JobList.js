@@ -11,7 +11,7 @@ import {
   FlatList,
   Pressable,
   Dimensions,
-  Modal,
+  Platform,
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -165,12 +165,14 @@ const JobList = props => {
           <View style={styles.searchContainer}>
             <View style={styles.seachTextinput}>
               <TextInput
-                autoCapitalize="words"
+                autoCapitalize="characters"
                 autoCorrect={false}
                 onChangeText={text => handleSearch(text)}
                 status="info"
-                placeholder="Search here ..."
-                style={styles.serachTextinputStyle}
+                placeholder="Search here using location name..."
+                style={Platform.OS === 'ios' ? styles.serachTextinputStyleIos : styles.serachTextinputStyleAndroid}
+                placeholderTextColor={'#808080'}
+
               />
             </View>
 
@@ -547,7 +549,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     alignSelf: 'flex-end',
-    paddingLeft: 40,
+    paddingLeft: 50,
     marginBottom: 12,
   },
 
@@ -564,10 +566,19 @@ const styles = StyleSheet.create({
 
   searchClose: {marginLeft: 10, alignSelf: 'center'},
 
-  serachTextinputStyle: {
+  serachTextinputStyleIos: {
     color: '#000',
     fontFamily: 'TimesNewRomanPSMT',
     fontSize: 16,
+    height: 45,
+    paddingLeft: 10
+  },
+
+  serachTextinputStyleAndroid: {
+    color: '#000',
+    fontFamily: 'TimesNewRomanPSMT',
+    fontSize: 16,
+   
   },
 });
 
