@@ -11,7 +11,7 @@ import {
   TextInput,
   ActivityIndicator,
   Platform,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -202,12 +202,11 @@ const RequestForm = ({navigation}) => {
   } else {
     return (
       <View style={styles.container}>
-         <SafeAreaView>
-        <CustomHeader text={'Maintenance Request Form'} />
-        <KeyboardAwareScrollView
-          style={styles.mainCont}
-          keyboardShouldPersistTaps="handled">
-         
+        <SafeAreaView>
+          <CustomHeader text={'Maintenance Request Form'} />
+          <KeyboardAwareScrollView
+            style={styles.mainCont}
+            keyboardShouldPersistTaps="handled">
             <Text style={styles.title}>
               Complete this form for each maintenance task required
             </Text>
@@ -217,7 +216,11 @@ const RequestForm = ({navigation}) => {
 
             <View style={[styles.dropdownContainer]}>
               <TextInput
-                style={Platform.OS === 'ios' ?  styles.nameInputIos:  styles.nameInputAndroid}
+                style={
+                  Platform.OS === 'ios'
+                    ? styles.nameInputIos
+                    : styles.nameInputAndroid
+                }
                 autoCapitalize="characters"
                 multiline={true}
                 autoCorrect={false}
@@ -530,8 +533,7 @@ const RequestForm = ({navigation}) => {
             />
 
             <View style={{marginBottom: 60}} />
-          
-        </KeyboardAwareScrollView>
+          </KeyboardAwareScrollView>
         </SafeAreaView>
       </View>
     );
@@ -541,7 +543,7 @@ const RequestForm = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 100
+    marginBottom: 100,
   },
 
   mainCont: {
@@ -649,8 +651,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 5,
     paddingTop: 17,
-    paddingBottom: 17
-
+    paddingBottom: 17,
   },
 
   nameInputAndroid: {
@@ -665,8 +666,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginVertical: 5,
-
-
   },
 
   direction: {
@@ -676,8 +675,8 @@ const styles = StyleSheet.create({
   },
 
   StatusBar: {
-    backgroundColor: '#219DCD'
-}
+    backgroundColor: '#219DCD',
+  },
 });
 
 export default RequestForm;
