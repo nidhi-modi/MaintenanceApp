@@ -16,9 +16,9 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import {useForm} from 'react-hook-form';
-import {Searchbar} from 'react-native-paper';
+import CustomStatusBar from '../components/CustomStatusBar';
 import Card from '../components/Card';
 import moment from 'moment';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -147,9 +147,8 @@ const JobList = props => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView>
-        <View style={{backgroundColor: '#219DCD'}}>
-          <View style={{marginTop: STATUSBAR_HEIGHT}}>
+      <SafeAreaProvider>
+      <CustomStatusBar backgroundColor= "#219DCD"/>
             <View style={styles.header}>
               <Text style={{color: '#219DCD'}}>Hi JHi</Text>
               <Text style={styles.textSize}>Maintenance Job List</Text>
@@ -162,8 +161,6 @@ const JobList = props => {
                 />
               </Pressable>
             </View>
-          </View>
-        </View>
 
         <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
           {searchText ? (
@@ -199,7 +196,7 @@ const JobList = props => {
 
           {jobDetails.length != 0 ? (
             <FlatList
-              contentContainerStyle={{paddingBottom: 200}}
+              contentContainerStyle={{paddingBottom: 250}}
               data={filterSearchData()}
               showsHorizontalScrollIndicator={false}
               ListEmptyComponent={listEmptyComponent}
@@ -330,7 +327,7 @@ const JobList = props => {
             </View>
           )}
         </View>
-      </SafeAreaView>
+      </SafeAreaProvider>
     </View>
   );
 };

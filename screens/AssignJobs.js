@@ -17,12 +17,12 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import {useForm} from 'react-hook-form';
 import Toast from 'react-native-simple-toast';
 import CustomButton from '../components/CustomButton';
 import CustomHeader from '../components/CustomHeader';
-import {Freeze} from 'react-freeze';
+import CustomStatusBar from '../components/CustomStatusBar';
 import Card from '../components/Card';
 import moment from 'moment';
 
@@ -212,12 +212,9 @@ const AssignJobs = props => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView>
-        <View style={{backgroundColor: '#219DCD'}}>
-          <View style={{marginTop: STATUSBAR_HEIGHT}}>
+      <SafeAreaProvider>
+      <CustomStatusBar backgroundColor= "#219DCD"/>
             <CustomHeader text={'Maintenance Jobs Assigned'} />
-          </View>
-        </View>
         <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
           {requestDetails.length != 0 ? (
             <FlatList
@@ -351,7 +348,7 @@ const AssignJobs = props => {
             </View>
           )}
         </View>
-      </SafeAreaView>
+      </SafeAreaProvider>
     </View>
   );
 };

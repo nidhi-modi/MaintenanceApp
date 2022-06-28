@@ -25,6 +25,7 @@ const CustomInput = ({
             ]}>
             <TextInput
               value={value}
+              returnKeyType={'done'}
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder={placeholder}

@@ -21,6 +21,7 @@ import RNDropDownPicker from '@nectr-rn/react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import CustomButton from '../components/CustomButton';
 import CustomHeader from '../components/CustomHeader';
+import CustomStatusBar from '../components/CustomStatusBar';
 import {Freeze} from 'react-freeze';
 import SendSMS from 'react-native-sms';
 import moment from 'moment';
@@ -204,12 +205,9 @@ const RequestForm = ({navigation}) => {
   } else {
     return (
       <View style={styles.container}>
-        <SafeAreaView>
-          <View style={{backgroundColor: '#219DCD'}}>
-            <View style={{marginTop: STATUSBAR_HEIGHT}}>
+        <SafeAreaProvider>
+          <CustomStatusBar backgroundColor= "#219DCD"/>
               <CustomHeader text={'Maintenance Request Form'} />
-            </View>
-          </View>
           <KeyboardAwareScrollView
             style={styles.mainCont}
             keyboardShouldPersistTaps="handled">
@@ -536,7 +534,7 @@ const RequestForm = ({navigation}) => {
 
             <View style={{marginBottom: 60}} />
           </KeyboardAwareScrollView>
-        </SafeAreaView>
+        </SafeAreaProvider>
       </View>
     );
   }
@@ -545,7 +543,7 @@ const RequestForm = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 100,
+    marginBottom: 130,
   },
 
   mainCont: {
