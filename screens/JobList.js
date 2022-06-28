@@ -66,7 +66,7 @@ const JobList = props => {
       'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
     const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
 
-    console.log('URL : ' + url1);
+    //console.log('URL : ' + url1);
 
     fetch(url1, {mode: 'no-cors', signal: signal})
       .then(response => response.json())
@@ -106,12 +106,12 @@ const JobList = props => {
     if (text) {
       const newData = jobDetails.items.filter(function (item) {
         // Applying filter for the inserted text in search bar
-        const itemData = item.house
-          ? item.house.toUpperCase()
-          : ''.toUpperCase();
+        const itemData = item.assign_to;
+        //   ? item.assign_to.toUpperCase()
+        // : ''.toUpperCase();
         const itemData2 = item.job_status;
 
-        const textData = text.toUpperCase();
+        const textData = text; //.toUpperCase();
         const textData2 = 'Completed';
         return (
           itemData.indexOf(textData) > -1 && itemData2.indexOf(textData2) > -1
@@ -146,54 +146,57 @@ const JobList = props => {
 
   return (
     <View style={styles.container}>
-        <SafeAreaView>
-      <View style={styles.header}>
-        <Text style={{color: '#219DCD'}}>Hi JHi</Text>
-        <Text style={styles.textSize}>Maintenance Job List</Text>
-        <Pressable
-          onPress={() => setSearchText(true)}
-          android_ripple={{borderless: true, radius: 50}}>
-          <Image
-            style={styles.resizeImage}
-            source={require('../images/search.png')}
-          />
-        </Pressable>
-      </View>
+      <SafeAreaView>
+        <View style={styles.header}>
+          <Text style={{color: '#219DCD'}}>Hi JHi</Text>
+          <Text style={styles.textSize}>Maintenance Job List</Text>
+          <Pressable
+            onPress={() => setSearchText(true)}
+            android_ripple={{borderless: true, radius: 50}}>
+            <Image
+              style={styles.resizeImage}
+              source={require('../images/search.png')}
+            />
+          </Pressable>
+        </View>
 
-      <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
-        {searchText ? (
-          <View style={styles.searchContainer}>
-            <View style={styles.seachTextinput}>
-              <TextInput
-                autoCapitalize="characters"
-                autoCorrect={false}
-                onChangeText={text => handleSearch(text)}
-                status="info"
-                placeholder="Search here using location name..."
-                style={Platform.OS === 'ios' ? styles.serachTextinputStyleIos : styles.serachTextinputStyleAndroid}
-                placeholderTextColor={'#808080'}
+        <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
+          {searchText ? (
+            <View style={styles.searchContainer}>
+              <View style={styles.seachTextinput}>
+                <TextInput
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  onChangeText={text => handleSearch(text)}
+                  status="info"
+                  placeholder="Search here using name..."
+                  style={
+                    Platform.OS === 'ios'
+                      ? styles.serachTextinputStyleIos
+                      : styles.serachTextinputStyleAndroid
+                  }
+                  placeholderTextColor={'#808080'}
+                />
+              </View>
 
-              />
+              <View style={styles.searchClose}>
+                <SimpleLineIcons
+                  onPress={() => {
+                    setSearchText(false), setSearchQuery('');
+                  }}
+                  name="close"
+                  size={35}
+                  color="black"
+                />
+              </View>
             </View>
+          ) : null}
 
-            <View style={styles.searchClose}>
-              <SimpleLineIcons
-                onPress={() => {
-                  setSearchText(false), setSearchQuery('');
-                }}
-                name="close"
-                size={35}
-                color="black"
-              />
-            </View>
-          </View>
-        ) : null}
-
-      
           {jobDetails.length != 0 ? (
             <FlatList
-              contentContainerStyle={{paddingBottom: 100}}
+              contentContainerStyle={{paddingBottom: 200}}
               data={filterSearchData()}
+              showsHorizontalScrollIndicator={false}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({item}) => (
                 <Card>
@@ -215,7 +218,12 @@ const JobList = props => {
 
                     <View style={styles.direction}>
                       <Text style={styles.clearHeadingText}> Due Date : </Text>
-                      <Text style={styles.flatListText}>{item.due_date}</Text>
+                      <Text style={styles.flatListText}>
+                        {' '}
+                        {moment
+                          .utc(item.due_date, 'dddd, MMMM Do YYYY')
+                          .format('MMMM Do, YYYY')}
+                      </Text>
                     </View>
 
                     <View style={styles.direction}>
@@ -236,9 +244,12 @@ const JobList = props => {
                           Started On :{' '}
                         </Text>
                         <Text style={styles.flatListText}>
-                          {moment(item.jobstart_timestamp).format(
-                            'MMMM Do YYYY',
-                          )}
+                          {moment
+                            .utc(
+                              item.jobstart_timestamp,
+                              'YYYY-MM-DDTHH:mm:ssZ',
+                            )
+                            .format('MMMM Do, YYYY')}
                         </Text>
                       </View>
 
@@ -248,9 +259,9 @@ const JobList = props => {
                           Completed On :{' '}
                         </Text>
                         <Text style={styles.flatListText}>
-                          {moment(item.jobdone_timestamp).format(
-                            'MMMM Do YYYY',
-                          )}
+                          {moment
+                            .utc(item.jobdone_timestamp, 'YYYY-MM-DDTHH:mm:ssZ')
+                            .format('MMMM Do, YYYY')}
                         </Text>
                       </View>
 
@@ -313,9 +324,8 @@ const JobList = props => {
               <Text style={styles.loadingDataTitle}>Please Wait...</Text>
             </View>
           )}
-      </View>
+        </View>
       </SafeAreaView>
-
     </View>
   );
 };
@@ -330,6 +340,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'TimesNewRomanPSMT',
     marginBottom: 11,
+    flexShrink: 1,
   },
 
   flatListTextID: {
@@ -379,12 +390,11 @@ const styles = StyleSheet.create({
   },
 
   flatListTextDesc: {
-    flexShrink: 1,
-    flex: 1,
     color: 'black',
     fontSize: 16,
     fontFamily: 'TimesNewRomanPSMT',
     marginBottom: 11,
+    flexShrink: 1,
   },
 
   clearHeadingText: {
@@ -437,6 +447,13 @@ const styles = StyleSheet.create({
 
   direction: {
     flexDirection: 'row',
+  },
+
+  directionBottom: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flexShrink: 1,
+    marginBottom: 5,
   },
 
   directionCol: {
@@ -571,14 +588,13 @@ const styles = StyleSheet.create({
     fontFamily: 'TimesNewRomanPSMT',
     fontSize: 16,
     height: 45,
-    paddingLeft: 10
+    paddingLeft: 10,
   },
 
   serachTextinputStyleAndroid: {
     color: '#000',
     fontFamily: 'TimesNewRomanPSMT',
     fontSize: 16,
-   
   },
 });
 

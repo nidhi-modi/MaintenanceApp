@@ -9,7 +9,7 @@ import {
   TextInput,
   BackHandler,
   FlatList,
-  Pressable,
+  Alert,
   Dimensions,
   Modal,
   TouchableOpacity,
@@ -93,8 +93,6 @@ const AssignJobs = props => {
       'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
     const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
 
-    console.log('URL : ' + url1);
-
     fetch(url1, {mode: 'no-cors', signal: signal})
       .then(response => response.json())
       .then(responseJson => {
@@ -118,11 +116,26 @@ const AssignJobs = props => {
   };
 
   const onStartJob = jobID => {
+    Alert.alert(
+      'Confirm Alert',
+      'Do you want to start this job?',
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {text: 'Yes', onPress: () => startJob(jobID)},
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const startJob = idJob => {
     try {
       const scriptUrl2 =
         'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
       const url2 = `${scriptUrl2}?
-     callback=ctrlq&action=${'doAddStartJobDetails'}&job_uniqueId=${jobID}`;
+     callback=ctrlq&action=${'doAddStartJobDetails'}&job_uniqueId=${idJob}`;
 
       console.log('URL : ' + url2);
       fetch(url2, {mode: 'no-cors'}).then(() => {
@@ -134,11 +147,26 @@ const AssignJobs = props => {
   };
 
   const onStopJob = jobID => {
+    Alert.alert(
+      'Are you sure?',
+      'Do you want to stop and close this job',
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {text: 'Yes', onPress: () => stopJob(jobID)},
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const stopJob = idJob => {
     try {
       const scriptUrl3 =
         'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
       const url3 = `${scriptUrl3}?
-     callback=ctrlq&action=${'doAddStopJobDetails'}&job_Id=${jobID}`;
+     callback=ctrlq&action=${'doAddStopJobDetails'}&job_Id=${idJob}`;
 
       console.log('URL : ' + url3);
       fetch(url3, {mode: 'no-cors'}).then(() => {
@@ -182,10 +210,9 @@ const AssignJobs = props => {
 
   return (
     <View style={styles.container}>
-        <SafeAreaView>
-      <CustomHeader text={'Maintenance Jobs Assigned'} />
-      <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
-      
+      <SafeAreaView>
+        <CustomHeader text={'Maintenance Jobs Assigned'} />
+        <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
           {requestDetails.length != 0 ? (
             <FlatList
               contentContainerStyle={{paddingBottom: 100}}
@@ -317,8 +344,7 @@ const AssignJobs = props => {
               <Text style={styles.loadingDataTitle}>Please Wait...</Text>
             </View>
           )}
-      
-      </View>
+        </View>
       </SafeAreaView>
     </View>
   );

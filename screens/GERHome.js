@@ -17,6 +17,7 @@ import {Freeze} from 'react-freeze';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const GERHome = ({navigation}) => {
+  const [getLogin, setLogin] = useState([]);
   const [sitePressed, setSitePressed] = useState('');
 
   useEffect(() => {
@@ -26,21 +27,16 @@ const GERHome = ({navigation}) => {
     const scriptUrl1 =
       'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
     const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetLoginData'}`;
-
-    console.log('URL : ' + url1);
     fetch(url1, {mode: 'no-cors', signal: signal})
       .then(response => response.json())
       .then(responseJson => {
-        AsyncStorage.setItem(
-          'loginDetails',
-          JSON.stringify(responseJson),
-          err => {
-            if (err) {
-              console.log('an error');
-              throw err;
-            }
-          },
-        ).catch(err => {
+        setLogin(responseJson);
+        AsyncStorage.setItem('loginDetails', JSON.stringify(getLogin), err => {
+          if (err) {
+            console.log('an error');
+            throw err;
+          }
+        }).catch(err => {
           console.log('error is: ' + err);
         });
       })
@@ -48,7 +44,7 @@ const GERHome = ({navigation}) => {
         console.log(error);
       });
     return () => controller.abort();
-  }, []);
+  }, [getLogin]);
 
   useEffect(() => {
     const backAction = () => {
