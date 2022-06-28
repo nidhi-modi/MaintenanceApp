@@ -4,7 +4,7 @@ import {
   View,
   StyleSheet,
   BackHandler,
-  ScrollView,
+  LogBox,
   Pressable,
   Image,
   TouchableOpacity,
@@ -19,6 +19,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 const GERHome = ({navigation}) => {
   const [getLogin, setLogin] = useState([]);
   const [sitePressed, setSitePressed] = useState('');
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+    LogBox.ignoreAllLogs(); //Ignore all log notifications
+  });
 
   useEffect(() => {
     const controller = new AbortController();

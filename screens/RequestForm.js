@@ -364,11 +364,7 @@ const RequestForm = ({navigation}) => {
                     ) : (
                       <RNDropDownPicker
                         items={[
-                          {label: 'Nidhi Modi', value: 'Nidhi Modi'},
-                          {label: 'B', value: 'B'},
-                          {label: 'C', value: 'C'},
-                          {label: 'D', value: 'D'},
-                          {label: 'E', value: 'E'},
+                          {label: 'Loading Names..', value: 'Loading Names..'},
                         ]}
                         placeholder="SELECT"
                         containerStyle={{height: 55}}
