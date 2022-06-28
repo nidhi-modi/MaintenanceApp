@@ -25,7 +25,7 @@ import {Freeze} from 'react-freeze';
 import SendSMS from 'react-native-sms';
 import moment from 'moment';
 
-const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 25 : StatusBar.currentHeight
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : null;
 
 const RequestForm = ({navigation}) => {
   const {
@@ -207,8 +207,8 @@ const RequestForm = ({navigation}) => {
         <SafeAreaView>
           <View style={{backgroundColor: '#219DCD'}}>
             <View style={{marginTop: STATUSBAR_HEIGHT}}>
-          <CustomHeader text={'Maintenance Request Form'} />
-          </View>
+              <CustomHeader text={'Maintenance Request Form'} />
+            </View>
           </View>
           <KeyboardAwareScrollView
             style={styles.mainCont}

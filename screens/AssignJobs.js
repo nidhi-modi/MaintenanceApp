@@ -12,6 +12,7 @@ import {
   Alert,
   Dimensions,
   Modal,
+  StatusBar,
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -28,8 +29,7 @@ import moment from 'moment';
 let screenHeight = Dimensions.get('window').height / 2.2;
 let screenWidth = Dimensions.get('window').width / 1.1;
 let scrollHeight = Dimensions.get('window').height;
-const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 25 : StatusBar.currentHeight
-
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : null;
 
 var jobID = '';
 
@@ -213,10 +213,10 @@ const AssignJobs = props => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-      <View style={{backgroundColor: '#219DCD'}}>
-            <View style={{marginTop: STATUSBAR_HEIGHT}}>
-        <CustomHeader text={'Maintenance Jobs Assigned'} />
-        </View>
+        <View style={{backgroundColor: '#219DCD'}}>
+          <View style={{marginTop: STATUSBAR_HEIGHT}}>
+            <CustomHeader text={'Maintenance Jobs Assigned'} />
+          </View>
         </View>
         <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
           {requestDetails.length != 0 ? (
