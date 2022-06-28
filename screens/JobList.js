@@ -26,6 +26,8 @@ import Feather from 'react-native-vector-icons/Feather';
 
 let screenHeight = Dimensions.get('window').height / 2.2;
 let screenWidth = Dimensions.get('window').width / 1.1;
+const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 25 : StatusBar.currentHeight
+
 
 var jobID = '';
 
@@ -147,6 +149,8 @@ const JobList = props => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
+      <View style={{backgroundColor: '#219DCD'}}>
+            <View style={{marginTop: STATUSBAR_HEIGHT}}>
         <View style={styles.header}>
           <Text style={{color: '#219DCD'}}>Hi JHi</Text>
           <Text style={styles.textSize}>Maintenance Job List</Text>
@@ -158,6 +162,8 @@ const JobList = props => {
               source={require('../images/search.png')}
             />
           </Pressable>
+        </View>
+        </View>
         </View>
 
         <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
