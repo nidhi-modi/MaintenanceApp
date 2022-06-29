@@ -148,19 +148,19 @@ const JobList = props => {
   return (
     <View style={styles.container}>
       <SafeAreaProvider>
-      <CustomStatusBar backgroundColor= "#219DCD"/>
-            <View style={styles.header}>
-              <Text style={{color: '#219DCD'}}>Hi JHi</Text>
-              <Text style={styles.textSize}>Maintenance Job List</Text>
-              <Pressable
-                onPress={() => setSearchText(true)}
-                android_ripple={{borderless: true, radius: 50}}>
-                <Image
-                  style={styles.resizeImage}
-                  source={require('../images/search.png')}
-                />
-              </Pressable>
-            </View>
+        <CustomStatusBar backgroundColor="#219DCD" />
+        <View style={styles.header}>
+          <Text style={{color: '#219DCD'}}>Hi JHi</Text>
+          <Text style={styles.textSize}>Maintenance Job List</Text>
+          <Pressable
+            onPress={() => setSearchText(true)}
+            android_ripple={{borderless: true, radius: 50}}>
+            <Image
+              style={styles.resizeImage}
+              source={require('../images/search.png')}
+            />
+          </Pressable>
+        </View>
 
         <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
           {searchText ? (
@@ -196,7 +196,7 @@ const JobList = props => {
 
           {jobDetails.length != 0 ? (
             <FlatList
-              contentContainerStyle={{paddingBottom: 250}}
+              contentContainerStyle={{paddingBottom: 200}}
               data={filterSearchData()}
               showsHorizontalScrollIndicator={false}
               ListEmptyComponent={listEmptyComponent}

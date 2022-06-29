@@ -206,8 +206,8 @@ const RequestForm = ({navigation}) => {
     return (
       <View style={styles.container}>
         <SafeAreaProvider>
-          <CustomStatusBar backgroundColor= "#219DCD"/>
-              <CustomHeader text={'Maintenance Request Form'} />
+          <CustomStatusBar backgroundColor="#219DCD" />
+          <CustomHeader text={'Maintenance Request Form'} />
           <KeyboardAwareScrollView
             style={styles.mainCont}
             keyboardShouldPersistTaps="handled">
@@ -543,7 +543,7 @@ const RequestForm = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 130,
+    marginBottom: 100,
   },
 
   mainCont: {
