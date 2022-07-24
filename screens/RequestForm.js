@@ -50,6 +50,27 @@ const RequestForm = ({navigation}) => {
     const controller = new AbortController();
     const signal = controller.signal;
 
+    const scriptUrl1 =
+      'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+    const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetLoginData'}`;
+
+    fetch(url1, {mode: 'no-cors', signal: signal})
+      .then(response => response.json())
+      .then(responseJson => {
+        setLoginDetails(responseJson);
+        console.log('DATA  : ' + JSON.stringify(responseJson));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    return () => controller.abort();
+  }, [loginDetail]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     try {
       AsyncStorage.getItem('house')
         .then(selectedHouse => {
@@ -69,24 +90,6 @@ const RequestForm = ({navigation}) => {
     } catch (error) {}
     return () => controller.abort();
   }, []);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    try {
-      AsyncStorage.getItem('loginDetails')
-        .then(loginDetail => {
-          if (loginDetail !== null) {
-            var details = JSON.parse(loginDetail);
-            setLoginDetails(details);
-          }
-        })
-        .done();
-    } catch (error) {}
-
-    return () => controller.abort();
-  }, [loginDetail]);
 
   useEffect(() => {
     const backAction = () => {
@@ -125,7 +128,7 @@ const RequestForm = ({navigation}) => {
         const scriptUrl =
           'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
         const url = `${scriptUrl}?
-  callback=ctrlq&action=${'doPostRequestForm'}&site_name=${house}&house_number=${siteLocation}&assigned_from=${assignedName}&description=${description}&assigned_to=${assignTaskTo}&priority=${priority}&ideal_due_date=${dateFormat}`;
+   callback=ctrlq&action=${'doPostRequestForm'}&site_name=${house}&house_number=${siteLocation}&assigned_from=${assignedName}&description=${description}&assigned_to=${assignTaskTo}&priority=${priority}&ideal_due_date=${dateFormat}`;
         console.log('URL : ' + url);
         fetch(url, {mode: 'no-cors'}).then(() => {
           console.log('Data Send');

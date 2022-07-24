@@ -119,8 +119,8 @@ const AssignJobs = props => {
 
   const onStartJob = jobID => {
     Alert.alert(
-      'Confirm Alert',
-      'Do you want to start this job?',
+      'H&S Check',
+      'Do you have appropriate PPE before starting this job?',
       [
         {
           text: 'No',
@@ -163,6 +163,21 @@ const AssignJobs = props => {
     );
   };
 
+  const onPauseJob = jobID => {
+    Alert.alert(
+      'Are you sure?',
+      'Do you want to hold this job and continue later?',
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {text: 'Yes', onPress: () => pauseJob(jobID)},
+      ],
+      {cancelable: false},
+    );
+  };
+
   const stopJob = idJob => {
     try {
       const scriptUrl3 =
@@ -177,6 +192,22 @@ const AssignJobs = props => {
           Toast.LENGTH_SHORT,
           Toast.CENTER,
         );
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const pauseJob = idJob => {
+    try {
+      const scriptUrl3 =
+        'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+      const url3 = `${scriptUrl3}?
+     callback=ctrlq&action=${'doAddPauseJobDetails'}&job_Id=${idJob}`;
+
+      console.log('URL : ' + url3);
+      fetch(url3, {mode: 'no-cors'}).then(() => {
+        Toast.showWithGravity('Job on Hold', Toast.LENGTH_SHORT, Toast.CENTER);
       });
     } catch (error) {
       console.log(error);
@@ -213,8 +244,8 @@ const AssignJobs = props => {
   return (
     <View style={styles.container}>
       <SafeAreaProvider>
-      <CustomStatusBar backgroundColor= "#219DCD"/>
-            <CustomHeader text={'Maintenance Jobs Assigned'} />
+        <CustomStatusBar backgroundColor="#219DCD" />
+        <CustomHeader text={'Maintenance Jobs Assigned'} />
         <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
           {requestDetails.length != 0 ? (
             <FlatList
@@ -266,6 +297,7 @@ const AssignJobs = props => {
                                 autoGrow={false}
                                 returnKeyType={'done'}
                                 keyboardType={'default'}
+                                value={jobUpdateComments}
                                 onChangeText={text => onChangeComments(text)}
                               />
                             </View>
@@ -320,13 +352,24 @@ const AssignJobs = props => {
                       </Text>
                     </View>
 
-                    {item.job_status == 'Job Started' ? (
-                      <View style={styles.buttonDimension}>
-                        <CustomButton
-                          text={'JOB DONE'}
-                          onPress={() => onStopJob(item.uniqueId)}
-                          bgColor={'#E90A17'}
-                        />
+                    {item.job_status == 'Job Started' &&
+                    item.job_status != 'Paused' ? (
+                      <View style={{flexDirection: 'row', marginRight: 5}}>
+                        <View style={styles.buttonStyle}>
+                          <CustomButton
+                            text={'JOB DONE'}
+                            onPress={() => onStopJob(item.uniqueId)}
+                            bgColor={'#E90A17'}
+                          />
+                        </View>
+
+                        <View style={styles.buttonStyle}>
+                          <CustomButton
+                            text={'PAUSE JOB'}
+                            onPress={() => onPauseJob(item.uniqueId)}
+                            bgColor={'#F08000'}
+                          />
+                        </View>
                       </View>
                     ) : (
                       <View style={styles.buttonDimension}>
@@ -478,6 +521,12 @@ const styles = StyleSheet.create({
   buttonDimension: {
     width: '80%',
     alignSelf: 'center',
+  },
+
+  buttonStyle: {
+    width: '50%',
+    alignSelf: 'center',
+    marginRight: 5,
   },
 
   buttonModalDimension: {
