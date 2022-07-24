@@ -20,7 +20,7 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import {useForm} from 'react-hook-form';
 import CustomStatusBar from '../components/CustomStatusBar';
 import Card from '../components/Card';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -67,12 +67,11 @@ const JobList = props => {
       'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
     const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
 
-    //console.log('URL : ' + url1);
-
     fetch(url1, {mode: 'no-cors', signal: signal})
       .then(response => response.json())
       .then(responseJson => {
         setJobDetails(responseJson);
+        console.log("Data : "+JSON.stringify(responseJson));
         //filterlist();
       })
       .catch(error => {
@@ -246,12 +245,12 @@ const JobList = props => {
                           Started On :{' '}
                         </Text>
                         <Text style={styles.flatListText}>
-                          {moment
-                            .utc(
-                              item.jobstart_timestamp,
-                              'YYYY-MM-DDTHH:mm:ssZ',
+                          {moment.tz(item.jobstart_timestamp)
+                            .format(
+                             
+                              'MMMM Do, YYYY',
                             )
-                            .format('MMMM Do, YYYY')}
+                           }
                         </Text>
                       </View>
 
@@ -262,7 +261,7 @@ const JobList = props => {
                         </Text>
                         <Text style={styles.flatListText}>
                           {moment
-                            .utc(item.jobdone_timestamp, 'YYYY-MM-DDTHH:mm:ssZ')
+                            .tz(item.jobdone_timestamp)
                             .format('MMMM Do, YYYY')}
                         </Text>
                       </View>

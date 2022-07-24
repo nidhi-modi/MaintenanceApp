@@ -79,7 +79,6 @@ const AssignJobs = props => {
 
         console.log('URL : ' + url5);
         fetch(url5, {mode: 'no-cors'}).then(() => {
-          console.log('Data Send');
         });
       } catch (error) {
         console.log(error);

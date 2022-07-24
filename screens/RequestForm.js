@@ -58,7 +58,6 @@ const RequestForm = ({navigation}) => {
       .then(response => response.json())
       .then(responseJson => {
         setLoginDetails(responseJson);
-        console.log('DATA  : ' + JSON.stringify(responseJson));
       })
       .catch(error => {
         console.log(error);
@@ -131,7 +130,6 @@ const RequestForm = ({navigation}) => {
    callback=ctrlq&action=${'doPostRequestForm'}&site_name=${house}&house_number=${siteLocation}&assigned_from=${assignedName}&description=${description}&assigned_to=${assignTaskTo}&priority=${priority}&ideal_due_date=${dateFormat}`;
         console.log('URL : ' + url);
         fetch(url, {mode: 'no-cors'}).then(() => {
-          console.log('Data Send');
           setDate('SELECT');
           reset();
           setLoading(true);
@@ -188,7 +186,6 @@ const RequestForm = ({navigation}) => {
         } else if (cancelled) {
           setLoading(false);
 
-          console.log('SMS Sent Cancelled.');
         } else if (error) {
           setLoading(false);
 

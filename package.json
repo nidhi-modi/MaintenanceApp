@@ -20,6 +20,7 @@
     "@react-navigation/stack": "^6.2.1",
     "axios": "^0.27.2",
     "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34",
     "react": "17.0.2",
     "react-freeze": "^1.0.0",
     "react-hook-form": "^7.31.2",
