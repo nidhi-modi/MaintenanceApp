@@ -71,7 +71,6 @@ const JobList = props => {
       .then(response => response.json())
       .then(responseJson => {
         setJobDetails(responseJson);
-        console.log("Data : "+JSON.stringify(responseJson));
         //filterlist();
       })
       .catch(error => {
@@ -245,12 +244,9 @@ const JobList = props => {
                           Started On :{' '}
                         </Text>
                         <Text style={styles.flatListText}>
-                          {moment.tz(item.jobstart_timestamp)
-                            .format(
-                             
-                              'MMMM Do, YYYY',
-                            )
-                           }
+                          {moment
+                            .tz(item.jobstart_timestamp)
+                            .format('MMMM Do, YYYY')}
                         </Text>
                       </View>
 
