@@ -185,7 +185,6 @@ const RequestForm = ({navigation}) => {
           Alert.alert('SMS Sent Successfully.');
         } else if (cancelled) {
           setLoading(false);
-
         } else if (error) {
           setLoading(false);
 
@@ -255,6 +254,9 @@ const RequestForm = ({navigation}) => {
                         {label: 'GER 3', value: 'GER 3'},
                         {label: 'GER 4', value: 'GER 4'},
                         {label: 'GER 5', value: 'GER 5'},
+                        {label: 'Tank Area', value: 'Tank Area'},
+                        {label: 'Irrigation Area', value: 'Irrigation Area'},
+                        {label: 'Outside Area', value: 'Outside Area'},
                       ]}
                       placeholder="SELECT"
                       containerStyle={{height: 55}}
