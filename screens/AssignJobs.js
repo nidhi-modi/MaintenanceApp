@@ -247,7 +247,7 @@ const AssignJobs = props => {
         <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
           {requestDetails.length != 0 ? (
             <FlatList
-              contentContainerStyle={{paddingBottom: 150}}
+              contentContainerStyle={{paddingBottom: 200}}
               data={filterlist()}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({item}) => (

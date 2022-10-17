@@ -194,7 +194,7 @@ const JobList = props => {
 
           {jobDetails.length != 0 ? (
             <FlatList
-              contentContainerStyle={{paddingBottom: 150}}
+              contentContainerStyle={{paddingBottom: 200}}
               data={filterSearchData()}
               showsHorizontalScrollIndicator={false}
               ListEmptyComponent={listEmptyComponent}
