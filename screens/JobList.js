@@ -125,7 +125,7 @@ const JobList = props => {
 
       const returnFilter = jobDetails.items
         .filter(jobAssignedTo)
-        .sort((a, b) => a.timestamp - b.timestamp);
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
       return returnFilter;
     }
@@ -194,7 +194,7 @@ const JobList = props => {
 
           {jobDetails.length != 0 ? (
             <FlatList
-              contentContainerStyle={{paddingBottom: 200}}
+              contentContainerStyle={{paddingBottom: 150}}
               data={filterSearchData()}
               showsHorizontalScrollIndicator={false}
               ListEmptyComponent={listEmptyComponent}
@@ -276,15 +276,15 @@ const JobList = props => {
                         )}
                       </View>
 
-                      <View style={styles.direction}>
+                      <View style={styles.directionJobDescription}>
                         <Text style={styles.clearHeadingText}>
                           {' '}
                           Job Description :{' '}
                         </Text>
-                        <Text style={styles.flatListTextDesc}>
-                          {item.job_decsription}
-                        </Text>
                       </View>
+                      <Text style={styles.flatListTextDesc}>
+                        {item.job_decsription}
+                      </Text>
 
                       <View style={styles.direction}>
                         <Text style={styles.clearHeadingText}> Job ID : </Text>
@@ -443,6 +443,10 @@ const styles = StyleSheet.create({
   },
 
   direction: {
+    flexDirection: 'row',
+  },
+
+  directionJobDescription: {
     flexDirection: 'row',
   },
 

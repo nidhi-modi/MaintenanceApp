@@ -78,8 +78,7 @@ const AssignJobs = props => {
      callback=ctrlq&action=${'doAddJobUpdateComments'}&job_uniqueId=${jobID}&update_job_comments=${jobUpdateComments}`;
 
         console.log('URL : ' + url5);
-        fetch(url5, {mode: 'no-cors'}).then(() => {
-        });
+        fetch(url5, {mode: 'no-cors'}).then(() => {});
       } catch (error) {
         console.log(error);
       }
@@ -248,7 +247,7 @@ const AssignJobs = props => {
         <View style={styles.mainCont} keyboardShouldPersistTaps="handled">
           {requestDetails.length != 0 ? (
             <FlatList
-              contentContainerStyle={{paddingBottom: 100}}
+              contentContainerStyle={{paddingBottom: 150}}
               data={filterlist()}
               ListEmptyComponent={listEmptyComponent}
               renderItem={({item}) => (
@@ -346,10 +345,10 @@ const AssignJobs = props => {
                         {' '}
                         Job Description :{' '}
                       </Text>
-                      <Text style={styles.flatListTextDesc}>
-                        {item.job_decsription}
-                      </Text>
                     </View>
+                    <Text style={styles.flatListTextDesc}>
+                      {item.job_decsription}
+                    </Text>
 
                     {item.job_status == 'Job Started' &&
                     item.job_status != 'Paused' ? (
