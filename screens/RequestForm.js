@@ -344,8 +344,8 @@ const RequestForm = ({navigation}) => {
                             value: 'General Outside Areas',
                           },
                           {label: 'Fert Room 1', value: 'Fert Room 1'},
-                          {label: 'Boiler Room 2/3', value: 'Fert Room 2/3'},
-                          {label: 'Boiler Room 4/5', value: 'Fert Room 4/5'},
+                          {label: 'Fert Room 2/3', value: 'Fert Room 2/3'},
+                          {label: 'Fert Room 4/5', value: 'Fert Room 4/5'},
                           {label: 'Fert Room 6', value: 'Fert Room 6'},
                         ]}
                         placeholder="SELECT"
