@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import SiteSelection from '../screens/SiteSelection';
 import ScreenNavigator from '../screens/ScreenNavigator';
-import GERHome from '../screens/GERHome';
+import Home from '../screens/Home';
 import Login from '../screens/Login';
 import RequestForm from '../screens/RequestForm';
 import AssignJobs from '../screens/AssignJobs';
@@ -45,8 +45,8 @@ const MainStackNavigatorLogin = () => {
         />
 
         <Stack.Screen
-          name="GERHome"
-          component={GERHome}
+          name="Home"
+          component={Home}
           options={{headerShown: false}}
         />
 

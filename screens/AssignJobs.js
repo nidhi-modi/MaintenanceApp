@@ -1,4 +1,5 @@
 //https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec
+//'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
 
 import React, {useEffect, useState} from 'react';
 import {
@@ -49,6 +50,7 @@ const AssignJobs = props => {
   const [textShown, setTextShown] = useState(false); //To show ur remaining Text
   const [isModalVisible, setModalVisible] = useState(false);
   const [jobUpdateComments, setJobUpdateComments] = useState('');
+  const [house, setHouse] = useState('');
 
   useEffect(() => {
     try {
@@ -71,16 +73,30 @@ const AssignJobs = props => {
     //send comments to Google StyleSheet
 
     if (jobUpdateComments != '') {
-      try {
-        const scriptUrl5 =
-          'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-        const url5 = `${scriptUrl5}?
-     callback=ctrlq&action=${'doAddJobUpdateComments'}&job_uniqueId=${jobID}&update_job_comments=${jobUpdateComments}`;
+      if (house === 'GER') {
+        try {
+          const scriptUrl5 =
+            'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+          const url5 = `${scriptUrl5}?
+       callback=ctrlq&action=${'doAddJobUpdateComments'}&job_uniqueId=${jobID}&update_job_comments=${jobUpdateComments}`;
 
-        console.log('URL : ' + url5);
-        fetch(url5, {mode: 'no-cors'}).then(() => {});
-      } catch (error) {
-        console.log(error);
+          console.log('URL : ' + url5);
+          fetch(url5, {mode: 'no-cors'}).then(() => {});
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (house === 'HAR') {
+        try {
+          const scriptUrl5 =
+            'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+          const url5 = `${scriptUrl5}?
+       callback=ctrlq&action=${'doAddJobUpdateComments'}&job_uniqueId=${jobID}&update_job_comments=${jobUpdateComments}`;
+
+          console.log('URL : ' + url5);
+          fetch(url5, {mode: 'no-cors'}).then(() => {});
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
@@ -89,19 +105,44 @@ const AssignJobs = props => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    const scriptUrl1 =
-      'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-    const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
+    try {
+      AsyncStorage.getItem('house')
+        .then(selectedHouse => {
+          var houseSelected = JSON.parse(selectedHouse);
+          setHouse(houseSelected);
 
-    fetch(url1, {mode: 'no-cors', signal: signal})
-      .then(response => response.json())
-      .then(responseJson => {
-        setRequestDetails(responseJson);
-        //filterlist();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+          if (houseSelected === 'HAR') {
+            const scriptUrl1 =
+              'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+            const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
+
+            fetch(url1, {mode: 'no-cors', signal: signal})
+              .then(response => response.json())
+              .then(responseJson => {
+                setRequestDetails(responseJson);
+                //filterlist();
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } else if (houseSelected === 'GER') {
+            const scriptUrl1 =
+              'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+            const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
+
+            fetch(url1, {mode: 'no-cors', signal: signal})
+              .then(response => response.json())
+              .then(responseJson => {
+                setRequestDetails(responseJson);
+                //filterlist();
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }
+        })
+        .done();
+    } catch (error) {}
 
     return () => controller.abort();
   }, [requestDetails]);
@@ -131,18 +172,42 @@ const AssignJobs = props => {
   };
 
   const startJob = idJob => {
-    try {
-      const scriptUrl2 =
-        'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-      const url2 = `${scriptUrl2}?
-     callback=ctrlq&action=${'doAddStartJobDetails'}&job_uniqueId=${idJob}`;
+    if (house === 'GER') {
+      try {
+        const scriptUrl2 =
+          'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+        const url2 = `${scriptUrl2}?
+       callback=ctrlq&action=${'doAddStartJobDetails'}&job_uniqueId=${idJob}`;
 
-      console.log('URL : ' + url2);
-      fetch(url2, {mode: 'no-cors'}).then(() => {
-        Toast.showWithGravity('Job Started', Toast.LENGTH_SHORT, Toast.CENTER);
-      });
-    } catch (error) {
-      console.log(error);
+        console.log('URL : ' + url2);
+        fetch(url2, {mode: 'no-cors'}).then(() => {
+          Toast.showWithGravity(
+            'Job Started',
+            Toast.LENGTH_SHORT,
+            Toast.CENTER,
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (house === 'HAR') {
+      try {
+        const scriptUrl2 =
+          'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+        const url2 = `${scriptUrl2}?
+       callback=ctrlq&action=${'doAddStartJobDetails'}&job_uniqueId=${idJob}`;
+
+        console.log('URL : ' + url2);
+        fetch(url2, {mode: 'no-cors'}).then(() => {
+          Toast.showWithGravity(
+            'Job Started',
+            Toast.LENGTH_SHORT,
+            Toast.CENTER,
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -177,38 +242,82 @@ const AssignJobs = props => {
   };
 
   const stopJob = idJob => {
-    try {
-      const scriptUrl3 =
-        'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-      const url3 = `${scriptUrl3}?
-     callback=ctrlq&action=${'doAddStopJobDetails'}&job_Id=${idJob}`;
+    if (house === 'GER') {
+      try {
+        const scriptUrl3 =
+          'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+        const url3 = `${scriptUrl3}?
+       callback=ctrlq&action=${'doAddStopJobDetails'}&job_Id=${idJob}`;
 
-      console.log('URL : ' + url3);
-      fetch(url3, {mode: 'no-cors'}).then(() => {
-        Toast.showWithGravity(
-          'Job Completed',
-          Toast.LENGTH_SHORT,
-          Toast.CENTER,
-        );
-      });
-    } catch (error) {
-      console.log(error);
+        console.log('URL : ' + url3);
+        fetch(url3, {mode: 'no-cors'}).then(() => {
+          Toast.showWithGravity(
+            'Job Completed',
+            Toast.LENGTH_SHORT,
+            Toast.CENTER,
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (house === 'HAR') {
+      try {
+        const scriptUrl3 =
+          'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+        const url3 = `${scriptUrl3}?
+       callback=ctrlq&action=${'doAddStopJobDetails'}&job_Id=${idJob}`;
+
+        console.log('URL : ' + url3);
+        fetch(url3, {mode: 'no-cors'}).then(() => {
+          Toast.showWithGravity(
+            'Job Completed',
+            Toast.LENGTH_SHORT,
+            Toast.CENTER,
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   const pauseJob = idJob => {
-    try {
-      const scriptUrl3 =
-        'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-      const url3 = `${scriptUrl3}?
-     callback=ctrlq&action=${'doAddPauseJobDetails'}&job_Id=${idJob}`;
+    if (house === 'GER') {
+      try {
+        const scriptUrl3 =
+          'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+        const url3 = `${scriptUrl3}?
+       callback=ctrlq&action=${'doAddPauseJobDetails'}&job_Id=${idJob}`;
 
-      console.log('URL : ' + url3);
-      fetch(url3, {mode: 'no-cors'}).then(() => {
-        Toast.showWithGravity('Job on Hold', Toast.LENGTH_SHORT, Toast.CENTER);
-      });
-    } catch (error) {
-      console.log(error);
+        console.log('URL : ' + url3);
+        fetch(url3, {mode: 'no-cors'}).then(() => {
+          Toast.showWithGravity(
+            'Job on Hold',
+            Toast.LENGTH_SHORT,
+            Toast.CENTER,
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (house === 'HAR') {
+      try {
+        const scriptUrl3 =
+          'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+        const url3 = `${scriptUrl3}?
+       callback=ctrlq&action=${'doAddPauseJobDetails'}&job_Id=${idJob}`;
+
+        console.log('URL : ' + url3);
+        fetch(url3, {mode: 'no-cors'}).then(() => {
+          Toast.showWithGravity(
+            'Job on Hold',
+            Toast.LENGTH_SHORT,
+            Toast.CENTER,
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

@@ -28,13 +28,13 @@ const SiteSelection = props => {
           setSelected(selectedHouse);
 
           if (houseSelected === 'HAR') {
-            navigation.navigate('GERHome');
+            navigation.navigate('Login');
           } else if (houseSelected === 'GER') {
             navigation.navigate('Login');
           } else if (houseSelected === 'OHA') {
-            navigation.navigate('GERHome');
+            navigation.navigate('Login');
           } else if (houseSelected === 'REP') {
-            navigation.navigate('GERHome');
+            navigation.navigate('Login');
           } else {
           }
         })

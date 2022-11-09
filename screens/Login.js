@@ -63,20 +63,38 @@ const Login = ({navigation}) => {
     setItem('email', email);
     setItem('phone', phone);
 
-    try {
-      const scriptUrl =
-        'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-      const url = `${scriptUrl}?
-callback=ctrlq&action=${'doPostLoginData'}&username=${name}&email=${email}&site=${house}&phone=${phone}`;
-      console.log('URL : ' + url);
-      fetch(url, {mode: 'no-cors'}).then(() => {
-        console.log('Data Send');
-        navigation.navigate('GERHome');
+    if (house === 'GER') {
+      try {
+        const scriptUrl =
+          'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+        const url = `${scriptUrl}?
+  callback=ctrlq&action=${'doPostLoginData'}&username=${name}&email=${email}&site=${house}&phone=${phone}`;
+        console.log('URL : ' + url);
+        fetch(url, {mode: 'no-cors'}).then(() => {
+          console.log('Data Send');
+          navigation.navigate('Home');
+          setLoading(false);
+        });
+      } catch (error) {
+        console.log(error);
         setLoading(false);
-      });
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
+      }
+    } else if (house === 'HAR') {
+      try {
+        const scriptUrl =
+          'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+        const url = `${scriptUrl}?
+  callback=ctrlq&action=${'doPostLoginData'}&username=${name}&email=${email}&site=${house}&phone=${phone}`;
+        console.log('URL : ' + url);
+        fetch(url, {mode: 'no-cors'}).then(() => {
+          console.log('Data Send');
+          navigation.navigate('Home');
+          setLoading(false);
+        });
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
     }
   };
 

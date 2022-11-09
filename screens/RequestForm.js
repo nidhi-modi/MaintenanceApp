@@ -1,4 +1,5 @@
 //https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec
+//'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
 
 import React, {useEffect, useState, useRef} from 'react';
 import {
@@ -27,6 +28,7 @@ import SendSMS from 'react-native-sms';
 import moment from 'moment';
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : null;
+var whatHouse = '';
 
 const RequestForm = ({navigation}) => {
   const {
@@ -50,34 +52,15 @@ const RequestForm = ({navigation}) => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    const scriptUrl1 =
-      'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-    const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetLoginData'}`;
-
-    fetch(url1, {mode: 'no-cors', signal: signal})
-      .then(response => response.json())
-      .then(responseJson => {
-        setLoginDetails(responseJson);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
-    return () => controller.abort();
-  }, [loginDetail]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    try {
+    /*try {
       AsyncStorage.getItem('house')
         .then(selectedHouse => {
           var houseSelected = JSON.parse(selectedHouse);
+          whatHouse = houseSelected;
           setHouse(houseSelected);
         })
         .done();
-    } catch (error) {}
+    } catch (error) {}*/
 
     try {
       AsyncStorage.getItem('name')
@@ -89,6 +72,52 @@ const RequestForm = ({navigation}) => {
     } catch (error) {}
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    try {
+      AsyncStorage.getItem('house')
+        .then(selectedHouse => {
+          var houseSelected = JSON.parse(selectedHouse);
+          setHouse(houseSelected);
+
+          //
+          if (houseSelected === 'GER') {
+            const scriptUrl1 =
+              'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+            const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetLoginData'}`;
+
+            fetch(url1, {mode: 'no-cors', signal: signal})
+              .then(response => response.json())
+              .then(responseJson => {
+                setLoginDetails(responseJson);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } else if (houseSelected === 'HAR') {
+            const scriptUrl1 =
+              'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+            const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetLoginData'}`;
+
+            fetch(url1, {mode: 'no-cors', signal: signal})
+              .then(response => response.json())
+              .then(responseJson => {
+                setLoginDetails(responseJson);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }
+          //
+        })
+        .done();
+    } catch (error) {}
+
+    return () => controller.abort();
+  }, [loginDetail]);
 
   useEffect(() => {
     const backAction = () => {
@@ -118,27 +147,44 @@ const RequestForm = ({navigation}) => {
 
     const dateFormat = moment(idealDueDate).format('dddd, MMMM Do YYYY');
 
-    setLoading(true);
-
     if (filteredData.length != 0) {
       //First send data to sheet and then send an sms
 
-      try {
-        const scriptUrl =
-          'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-        const url = `${scriptUrl}?
-   callback=ctrlq&action=${'doPostRequestForm'}&site_name=${house}&house_number=${siteLocation}&assigned_from=${assignedName}&description=${description}&assigned_to=${assignTaskTo}&priority=${priority}&ideal_due_date=${dateFormat}`;
-        console.log('URL : ' + url);
-        fetch(url, {mode: 'no-cors'}).then(() => {
-          setDate('SELECT');
-          reset();
-          setLoading(true);
-        });
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
+      setLoading(true);
 
+      if (house === 'GER') {
+        try {
+          const scriptUrl =
+            'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+          const url = `${scriptUrl}?
+   callback=ctrlq&action=${'doPostRequestForm'}&site_name=${house}&house_number=${siteLocation}&assigned_from=${assignedName}&description=${description}&assigned_to=${assignTaskTo}&priority=${priority}&ideal_due_date=${dateFormat}`;
+          console.log('URL : ' + url);
+          fetch(url, {mode: 'no-cors'}).then(() => {
+            setDate('SELECT');
+            reset();
+            setLoading(true);
+          });
+        } catch (error) {
+          console.log(error);
+          setLoading(false);
+        }
+      } else if (house === 'HAR') {
+        try {
+          const scriptUrl =
+            'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+          const url = `${scriptUrl}?
+   callback=ctrlq&action=${'doPostRequestForm'}&site_name=${house}&house_number=${siteLocation}&assigned_from=${assignedName}&description=${description}&assigned_to=${assignTaskTo}&priority=${priority}&ideal_due_date=${dateFormat}`;
+          console.log('URL : ' + url);
+          fetch(url, {mode: 'no-cors'}).then(() => {
+            setDate('SELECT');
+            reset();
+            setLoading(true);
+          });
+        } catch (error) {
+          console.log(error);
+          setLoading(false);
+        }
+      }
       //End
 
       const lastEntryFromList = filteredData[filteredData.length - 1];
@@ -149,9 +195,9 @@ const RequestForm = ({navigation}) => {
 
       const appendZero = '0' + filteredPhoneNumber;
 
-      smsSendFunction(appendZero, filteredUserName);
-
       setLoading(false);
+
+      smsSendFunction(appendZero, filteredUserName);
     }
   };
 
@@ -247,32 +293,78 @@ const RequestForm = ({navigation}) => {
               }) => (
                 <>
                   <View style={[styles.dropdownContainer]}>
-                    <RNDropDownPicker
-                      items={[
-                        {label: 'GER 1', value: 'GER 1'},
-                        {label: 'GER 2', value: 'GER 2'},
-                        {label: 'GER 3', value: 'GER 3'},
-                        {label: 'GER 4', value: 'GER 4'},
-                        {label: 'GER 5', value: 'GER 5'},
-                        {label: 'Tank Area', value: 'Tank Area'},
-                        {label: 'Irrigation Area', value: 'Irrigation Area'},
-                        {label: 'Outside Area', value: 'Outside Area'},
-                      ]}
-                      placeholder="SELECT"
-                      containerStyle={{height: 55}}
-                      itemStyle={{
-                        justifyContent: 'flex-start',
-                      }}
-                      dropDownStyle={{backgroundColor: '#fafafa'}}
-                      labelStyle={{
-                        fontSize: 15,
-                        textAlign: 'left',
-                        color: '#000000',
-                        fontFamily: 'TimesNewRomanPSMT',
-                      }}
-                      onChangeItem={item => onChange(item.value)}
-                      //value={value}
-                    />
+                    {house === 'GER' ? (
+                      <RNDropDownPicker
+                        items={[
+                          {label: 'GER 1', value: 'GER 1'},
+                          {label: 'GER 2', value: 'GER 2'},
+                          {label: 'GER 3', value: 'GER 3'},
+                          {label: 'GER 4', value: 'GER 4'},
+                          {label: 'GER 5', value: 'GER 5'},
+                          {label: 'Tank Area', value: 'Tank Area'},
+                          {label: 'Irrigation Area', value: 'Irrigation Area'},
+                          {label: 'Outside Area', value: 'Outside Area'},
+                        ]}
+                        placeholder="SELECT"
+                        containerStyle={{height: 55}}
+                        itemStyle={{
+                          justifyContent: 'flex-start',
+                        }}
+                        dropDownStyle={{backgroundColor: '#fafafa'}}
+                        labelStyle={{
+                          fontSize: 15,
+                          textAlign: 'left',
+                          color: '#000000',
+                          fontFamily: 'TimesNewRomanPSMT',
+                        }}
+                        onChangeItem={item => onChange(item.value)}
+                        //value={value}
+                      />
+                    ) : (
+                      <RNDropDownPicker
+                        items={[
+                          {label: 'HAR 1', value: 'HAR 1'},
+                          {label: 'HAR 2', value: 'HAR 2'},
+                          {label: 'HAR 3', value: 'HAR 3'},
+                          {label: 'HAR 4', value: 'HAR 4'},
+                          {label: 'HAR 5', value: 'HAR 5'},
+                          {label: 'HAR 6', value: 'HAR 6'},
+                          {label: 'Boiler Room', value: 'Boiler Room'},
+                          {
+                            label: 'Front Shed / Offices',
+                            value: 'Front Shed / Offices',
+                          },
+                          {
+                            label: 'Back Shed / Offices',
+                            value: 'Back Shed / Offices',
+                          },
+                          {label: 'Tank Farm', value: 'Tank Farm'},
+                          {
+                            label: 'General Outside Areas',
+                            value: 'General Outside Areas',
+                          },
+                          {label: 'Fert Room 1', value: 'Fert Room 1'},
+                          {label: 'Boiler Room 2/3', value: 'Fert Room 2/3'},
+                          {label: 'Boiler Room 4/5', value: 'Fert Room 4/5'},
+                          {label: 'Fert Room 6', value: 'Fert Room 6'},
+                        ]}
+                        placeholder="SELECT"
+                        containerStyle={{height: 55}}
+                        itemStyle={{
+                          justifyContent: 'flex-start',
+                        }}
+                        dropDownStyle={{backgroundColor: '#fafafa'}}
+                        labelStyle={{
+                          fontSize: 15,
+                          textAlign: 'left',
+                          color: '#000000',
+                          fontFamily: 'TimesNewRomanPSMT',
+                        }}
+                        onChangeItem={item => onChange(item.value)}
+                        //value={value}
+                      />
+                    )}
+
                     {error && (
                       <Text
                         style={{

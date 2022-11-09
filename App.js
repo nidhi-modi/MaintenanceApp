@@ -5,7 +5,7 @@ import MainStackNavigatorHome from './navigation/MainStackNavigatorHome';
 import MainStackNavigatorLogin from './navigation/MainStackNavigatorLogin';
 
 import AsyncStorage from '@react-native-community/async-storage';
-import GERHome from './screens/GERHome';
+import Home from './screens/Home';
 import Login from './screens/Login';
 
 const App = props => {
@@ -48,7 +48,7 @@ const App = props => {
   if (house !== null && phoneNumber === null) {
     return <Login />;
   } else if (house !== null && phoneNumber !== null) {
-    return <GERHome />;
+    return <Home />;
   } else {
     return <MainStackNavigator />;
   }

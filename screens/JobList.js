@@ -1,4 +1,5 @@
 //https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec
+//'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
 
 import React, {useEffect, useState} from 'react';
 import {
@@ -47,6 +48,7 @@ const JobList = props => {
   const [isReadMore, setReadMore] = useState(false);
   const [searchText, setSearchText] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [house, setHouse] = useState('');
 
   useEffect(() => {
     try {
@@ -63,19 +65,45 @@ const JobList = props => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    const scriptUrl1 =
-      'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
-    const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
+    try {
+      AsyncStorage.getItem('house')
+        .then(selectedHouse => {
+          var houseSelected = JSON.parse(selectedHouse);
+          setHouse(houseSelected);
 
-    fetch(url1, {mode: 'no-cors', signal: signal})
-      .then(response => response.json())
-      .then(responseJson => {
-        setJobDetails(responseJson);
-        //filterlist();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+          if (houseSelected === 'GER') {
+            const scriptUrl1 =
+              'https://script.google.com/macros/s/AKfycbyUz-VwLOzXtf6kPgO_e-fZ4eXMnF2WnFWBo36vmCs2PLLwRVw/exec';
+            const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
+
+            fetch(url1, {mode: 'no-cors', signal: signal})
+              .then(response => response.json())
+              .then(responseJson => {
+                setJobDetails(responseJson);
+                //filterlist();
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } else if (houseSelected === 'HAR') {
+            const scriptUrl1 =
+              'https://script.google.com/macros/s/AKfycbxZJI-9yM3jBXkUhf6VQBBWHyrx6D1UbdBc_6D_iftoAAemhw8Asey31mC7sC8ulQsNkA/exec';
+            const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetJobRequest'}`;
+
+            fetch(url1, {mode: 'no-cors', signal: signal})
+              .then(response => response.json())
+              .then(responseJson => {
+                setJobDetails(responseJson);
+                //filterlist();
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }
+        })
+        .done();
+    } catch (error) {}
+
     return () => controller.abort();
   }, [jobDetails]);
 

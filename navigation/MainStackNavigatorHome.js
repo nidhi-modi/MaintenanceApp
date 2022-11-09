@@ -6,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import SiteSelection from '../screens/SiteSelection';
 import ScreenNavigator from '../screens/ScreenNavigator';
-import GERHome from '../screens/GERHome';
+import Home from '../screens/Home';
 import Login from '../screens/Login';
 import RequestForm from '../screens/RequestForm';
 import AssignJobs from '../screens/AssignJobs';
@@ -18,7 +18,7 @@ const MainStackNavigatorHome = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="GERHome"
+        initialRouteName="Home"
         screenOptions={{
           //gestureEnabled: true,
           headerStyle: {
@@ -44,8 +44,8 @@ const MainStackNavigatorHome = () => {
         />
 
         <Stack.Screen
-          name="GERHome"
-          component={GERHome}
+          name="Home"
+          component={Home}
           options={{headerShown: false}}
         />
 

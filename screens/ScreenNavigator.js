@@ -21,13 +21,13 @@ export default class ScreenNavigator extends React.Component {
     AsyncStorage.setItem('house', JSON.stringify(houseSelected));
 
     if (houseSelected === 'HAR') {
-      //this.props.navigation.navigate('GerSite');
+      this.props.navigation.navigate('Login');
     } else if (houseSelected === 'GER') {
       this.props.navigation.navigate('Login');
     } else if (houseSelected === 'OHA') {
-      //this.props.navigation.navigate('GerSite');
+      this.props.navigation.navigate('Login');
     } else if (houseSelected === 'REP') {
-      //this.props.navigation.navigate('GerSite');
+      this.props.navigation.navigate('Login');
     } else {
     }
   }
