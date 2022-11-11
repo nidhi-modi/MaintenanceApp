@@ -265,6 +265,9 @@ const JobList = props => {
                     <View
                       style={{
                         height: isReadMore === item.uniqueId ? null : 0,
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
                       }}>
                       <View style={styles.direction}>
                         <Text style={styles.clearHeadingText}>
