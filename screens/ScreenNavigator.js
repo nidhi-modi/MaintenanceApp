@@ -18,6 +18,8 @@ export default class ScreenNavigator extends React.Component {
   componentDidMount() {
     houseSelected = this.props.route.params.site1;
 
+    console.log('hdjkhejghyhf  : ' + JSON.stringify(houseSelected));
+
     AsyncStorage.setItem('house', JSON.stringify(houseSelected));
 
     if (houseSelected === 'HAR') {
